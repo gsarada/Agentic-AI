@@ -1,11 +1,6 @@
-from dotenv import load_dotenv
 from pydantic import BaseModel
-from pypdf import PdfReader
 from tools import tools, handle_tool_calls
 from get_llm_model import get_model
-import gradio as gr
-
-load_dotenv(override=True)
 
 class Evaluation(BaseModel):
     acceptable: bool
@@ -15,23 +10,6 @@ class Evaluation(BaseModel):
 name = "saradag"
 eval_model = "gemini"
 run_model = "ollama-local"
-
-def load_file(filename, base_path='docs'):
-    ext = filename.split('.')[-1]
-    final_text = ""
-    if ext == 'pdf':
-        reader = PdfReader(f"{base_path}/{name}/{filename}")
-        for page in reader.pages:
-            text = page.extract_text()
-            if text:
-                final_text += text
-    else:
-        with open(f"{base_path}/{name}/{filename}", "r", encoding="utf-8") as f:
-            final_text = f.read()
-    return final_text
-
-profile = load_file('Profile.pdf')
-experience = load_file('myexp.txt')
 
 def chat_system_prompt():
     system_prompt = f"""You are acting as {name}, responding to questions on {name}'s personal website. \
@@ -164,7 +142,7 @@ def evaluate(reply, message, history):
             done = True
     return response.choices[0].message.parsed
 
-def chat(message, history):
+def candidate_agent_chat(message, history):
     reply = run(message, history)
     print(f'Chat Reply - {reply}')
 

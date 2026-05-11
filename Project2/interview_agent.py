@@ -59,7 +59,7 @@ def interview_system_prompt():
     - the candidate's profile and experience
     - previous interview responses
     
-    Your objective: Interview the candidate based on job description and candidate experience
+    Your objective: Interview the candidate named {name} based on job description and candidate experience
     
     Interview behavior:
     - Ask one question at a time.
@@ -82,9 +82,11 @@ def interview_system_prompt():
     - Candidate profile:
         {profile}
     - Candidate experience:
-        Use your get_all_chunks_formatted tool to get user experience
+        Use get_all_chunks_formatted tool to get user experience
     - Job description:
         {job_description}
+    Output:
+    question: str
     """
     return system_prompt
 
@@ -121,31 +123,32 @@ def evaluator_system_prompt():
     ## Output format (always return this exact structure)
     ````json
     {{
-     "candidate_level" : "weak | medium | strong",
-     [ 
-        {
-          "Question" : Question being evaluated
-          "overall_score": "7",
-          "dimensions": {
-            "technical_depth": "7",
-            "clarity": "5",
-            "ownership": "6",
-            "communication": "7",
-            "relevance": "8"
-          },
-          "strengths": [ 1 or 2 strengths
-            Example "Good ownership demonstration",
-            "Used real production example",
-            "Explained tradeoffs clearly"
+      "candidate_level": "weak | medium | strong",
+      "evaluation": [
+        {{
+          "question": "Question being evaluated",
+          "overall_score": "1 to 10",
+          "dimensions": {{
+            "technical_depth": "1 to 10",
+            "clarity": "1 to 10",
+            "ownership": "1 to 10",
+            "communication": "1 to 10",
+            "relevance": "1 to 10"
+          }},
+          "strengths": [
+            "Good ownership demonstration",
+            "Used real production example"
           ],
-          "weaknesses": [ 1 or 2 weaknesses
-            Example "Missing measurable impact",
+          "weaknesses": [
+            "Missing measurable impact",
             "Did not explain architecture constraints deeply"
           ],
-          "suggestion": ["Suggested improved answer not more than 50 words"]
-          },
-    ]
-}}
+          "suggestion": [
+            "Suggested improved answer not more than 50 words"
+          ]
+        }}
+      ]
+    }}
     ```"""
     return system_prompt
 
@@ -158,17 +161,16 @@ def evaluator_user_prompt(history):
 def run(message, history):
     history = [{"role": h["role"], "content": h["content"]} for h in history]
     messages = [{"role": "system", "content": interview_system_prompt()}] + history + [{"role": "user", "content": message}]
-    print(messages)
     openai, model_name = get_model(run_model)
     done = False
     while not done:
         response = openai.chat.completions.create(model=model_name, messages=messages, tools=tools)
-        finish_reason = response.choices[0].finish_reason
+        message = response.choices[0].message
+        print(f'run Reply - {message}')
 
         # If the LLM wants to call a tool, we do that!
 
-        if finish_reason == "tool_calls":
-            message = response.choices[0].message
+        if message.tool_calls:
             tool_calls = message.tool_calls
             results = handle_tool_calls(tool_calls)
             messages.append(message)
@@ -176,35 +178,51 @@ def run(message, history):
         else:
             done = True
     return response.choices[0].message.content
-def evaluate(history):
+def evaluate(history, message):
+    conversation = [{"role": h["role"], "content": h["content"]} for h in history] + \
+                    [{"role": "user", "content": message}]
+
     messages = [{"role": "system", "content": evaluator_system_prompt()}] + \
-               [{"role": "user", "content": evaluator_user_prompt(history)}]
+               [{"role": "user", "content": evaluator_user_prompt(conversation)}]
     openai, model_name = get_model(eval_model)
     done = False
     response = openai.chat.completions.parse(model=model_name, messages=messages, response_format=InterviewEvaluation)
     return response.choices[0].message.parsed
 
-def chat(message, history):
+questions = ["Let's begin the interview. Can you start by telling me a little about yourself and why you're interested in this leadership position at our organization? Please elaborate on your background, experience, and qualifications for the role",
+        "That's excellent, Sarada. It sounds like you have a wealth of experience in driving and delivering enterprise-scale multi-cloud platforms, with a strong focus on compliance, regulatory requirements, and business value. Your achievements at JPMorgan Chase & Co., such as enabling 700+ GenAI production use cases and driving cost optimization initiatives, are particularly noteworthy.\n\nI'd like to drill down further into your experience with DevOps and platform engineering. Can you tell me about a specific challenge you faced in your previous role, and how you led your team to overcome it? For example, what was the problem, and how did you go about solving it?",
+        "It sounds like you effectively managed a complex initiative with limited clarity, unclear timelines, and a new technology framework that the team was not familiar with. You demonstrated strong leadership skills by setting clear requirements, prioritizing controls, and engaging with stakeholders to achieve consensus.\n\nYour approach of establishing recurring meetings, analyzing priorities, and proposing a solution was prudent. By adopting a BDD (Behavior-Driven Development) framework, you successfully guided your team through the transition.\n\nThe fact that you were able to deliver results within tight timelines and establish the platform as production-ready is impressive. It's clear that you effectively managed risk and uncertainty in this high-pressure situation.\n\nCan you tell me more about how you ensured that the controls and policies were adequate for the business requirements, given the complexity of regulatory environments? How did you balance the need for control with the potential impact on business operations?" ]
+def interview_agent_chat(message, history):
+    print(message)
     if not interview_state["started"]:
-        message = "Start the interview"
         interview_state['started'] = True
     runs = interview_state["no_of_questions_asked"]
-    if runs <= 3:
-        reply = run(message, history)
-        interview_state["no_of_questions_asked"] = interview_state["no_of_questions_asked"] + 1
-        print(f'Chat Reply - {reply}')
-        if runs == 3:
-            reply = reply + "\n I will now evaluate your responses and provide the analysis"
-        return reply
-    else:
-        eval_response = evaluate(history)
+    print(f"Runs - {runs}")
+    if runs == 3:
+        eval_response = evaluate(history, message)
         print(f'Evaluation result - {eval_response}')
-        return eval_response
-
+        return str(eval_response)
+    else:
+        #reply = run(message, history)
+        reply = questions[runs]
+        interview_state["no_of_questions_asked"] = interview_state["no_of_questions_asked"] + 1
+        if runs == 3:
+            reply = reply
+        return reply
 
 demo = gr.ChatInterface(
-        fn=chat, title='Interview Simulator'
+    chat,
+    title="Interview Simulator",
+    chatbot=gr.Chatbot(
+        value=[
+            {
+                "role":"assistant",
+                "content": chat("Start interview", [])
+            }
+        ]
     )
+)
+
 
 if __name__ == "__main__":
     # ONLY the launch command goes here
