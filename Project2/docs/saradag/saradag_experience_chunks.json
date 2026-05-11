@@ -1,0 +1,100 @@
+{
+  "chunks": {
+    "Improving Application Security Team Performance": {
+      "label": "Improving BlackDuck Performance",
+      "keywords": [
+        "blackduck",
+        "security team",
+        "improvement",
+        "-performance",
+        "modern stack"
+      ],
+      "content": [
+        "Upgrading the application to modern stack to improve performance.",
+        "Improving scan times from 8+ hours to 10-15 minutes.",
+        "Implementing real-time API trigger for auto-scanning."
+      ]
+    },
+    "Leadership Development and Promotion": {
+      "label": "Professional Growth as VP and Expert Engineer",
+      "keywords": [
+        "VP",
+        "Expert Engineer",
+        "leadership development",
+        "professional growth",
+        "visibility"
+      ],
+      "content": [
+        "Promotion to VP in 2019.",
+        "Participation in the Expert Engineer program for technical leadership training.",
+        "Leadership opportunities and visibility within JP.",
+        "Growing global team of cloud SREs."
+      ]
+    },
+    "Cloud Engineering and Management": {
+      "label": "Leadership and Development of Cloud Infrastructure",
+      "keywords": [
+        "cloud infrastructure",
+        "AWS",
+        "Azure",
+        "engineering management",
+        "leadership development"
+      ],
+      "content": [
+        "Leading APAC public cloud SRE team on AWS.",
+        "Mentoring global teams of LOB customers.",
+        "Developing self-service capabilities to reduce manual effort."
+      ]
+    },
+    "Chaos Engineering and Platform Enablement": {
+      "label": "Chaos Studio Testing for AI/ML Use Cases",
+      "keywords": [
+        "chaos studio",
+        "AI/ML use cases",
+        "testing",
+        "platform enablement",
+        "platform-wide initiative"
+      ],
+      "content": [
+        "Enabling Chaos Studio on Azure to improve platform stability and availability.",
+        "Building end-to-end testing scripts using BDD Behavior Framework.",
+        "Testing capabilities increased from 20+ services to 80+, improving platform performance."
+      ]
+    },
+    "Continuous Compliance Environment Establishment": {
+      "label": "Continuous Policy Validation for Cloud Assets",
+      "keywords": [
+        "continuous policy validation",
+        "cloud asset inventory",
+        "Compliance environment establishment",
+        "policies deployment automation",
+        "Cybersecurity"
+      ],
+      "content": [
+        "Developing a cohesive continuous compliance and validation pipeline",
+        "Centralized policy repository for easy management and update."
+      ]
+    }
+  },
+  "topic_map": {
+    "Improving Application Security Team Performance": [
+      "challenges_and_optyms",
+      "project_goals"
+    ],
+    "Leadership Development and Promotion": [
+      "career_progression",
+      "leadership_opportunities"
+    ],
+    "Cloud Engineering and Management": [
+      "cloud_infrastructure",
+      "lead_management"
+    ],
+    "Chaos Engineering and Platform Enablement": [
+      "chaos_engineering",
+      "platform_enablement"
+    ],
+    "Continuous Compliance Environment Establishment": [
+      "continuous_compliance"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+Responsibilities:
+Lead transformational initiatives at one of the world’s most technologically advanced financial institutions
+This is a rare opportunity to operate at the intersection of technology, strategy, and innovation — shaping the next generation of cloud infrastructure, developer experience, automation, resiliency, and platform engineering at massive scale.
+You will lead high-performing engineering teams across regions, influence senior technology and business stakeholders, and drive the modernization of one of the industry's most sophisticated technology environments.
+Define and execute the enterprise DevOps and platform engineering strategy across global technology organizations
+Lead the modernization of infrastructure, CI/CD pipelines, cloud platforms, observability, automation, and site reliability engineering practices
+Build scalable, secure, highly resilient engineering platforms supporting mission-critical banking and trading applications
+Drive cloud transformation initiatives across hybrid and multi-cloud environments
+Champion engineering excellence, developer productivity, automation-first culture, and operational resilience
+Partner closely with CTOs, application development leaders, cybersecurity, infrastructure, and business stakeholders
+Establish and govern best practices for release engineering, infrastructure as code, containerization, and platform security
+Lead globally distributed teams of DevOps engineers, SREs, platform engineers, and technical leads
+Manage large-scale technology programs, budgets, vendor relationships, and strategic transformation initiatives
+Foster a culture of innovation, collaboration, accountability, and continuous improvement
+Ensure compliance with regulatory, audit, risk, and operational requirements in a highly regulated financial environment
+
+
+Requirements:
+Experience in infrastructure engineering, DevOps, cloud engineering, or platform engineering within large-scale enterprise environments
+Proven leadership experience managing global engineering organizations and large transformation programs
+Strong expertise in:
+Cloud platforms (AWS, Azure, GCP)
+Kubernetes and container orchestration
+CI/CD and release automation
+Infrastructure as Code (Terraform, Ansible, CloudFormation)
+Observability and monitoring platforms
+Site Reliability Engineering (SRE)
+Enterprise security and resiliency practices
+Deep understanding of modern software engineering and platform engineering principles
+Experience operating within highly regulated industries such as financial services, banking, or fintech preferred
+Strong executive communication and stakeholder management skills
+Ability to influence across organizational boundaries and drive change at scale
+Bachelor’s degree in Computer Science, Engineering, or related discipline; advanced degree preferred
