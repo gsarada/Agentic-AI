@@ -51,7 +51,8 @@ with gr.Blocks() as demo:
         with gr.Tab("Candidate Agent"):
 
             candidate_chat = gr.ChatInterface(
-                fn=candidate_agent_chat
+                fn=candidate_agent_chat,
+                additional_inputs=app_state
             )
 
         # Interview Simulator
@@ -72,11 +73,12 @@ with gr.Blocks() as demo:
 
             interview_chat = gr.ChatInterface(
                 fn=interview_agent_chat,
+                additional_inputs=app_state,
                 chatbot=gr.Chatbot(
                     value=[
                         {
                             "role":"assistant",
-                            "content": interview_agent_chat("Start interview", [])
+                            "content": interview_agent_chat("Start interview", [], app_state)
                         }
                     ]
                 )

@@ -1,12 +1,8 @@
-from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import List
 from tools import tools, handle_tool_calls
-from get_llm_model import get_model
-from pypdf import PdfReader
-import gradio as gr
+from get_llm_model import get_model, default_eval_model, default_chat_model
 
-load_dotenv(override=True)
 class Dimension(BaseModel):
     technical_depth: int
     clarity: int
@@ -32,34 +28,13 @@ interview_state = {
     "started": False
 }
 
-name = "saradag"
-eval_model = "gemini"
-run_model = "ollama-local"
-
-def load_file(filename, base_path='docs'):
-    ext = filename.split('.')[-1]
-    final_text = ""
-    if ext == 'pdf':
-        reader = PdfReader(f"{base_path}/{name}/{filename}")
-        for page in reader.pages:
-            text = page.extract_text()
-            if text:
-                final_text += text
-    else:
-        with open(f"{base_path}/{name}/{filename}", "r", encoding="utf-8") as f:
-            final_text = f.read()
-    return final_text
-
-profile = load_file('Profile.pdf')
-job_description = load_file('jd.txt')
-
-def interview_system_prompt():
+def interview_system_prompt(state):
     system_prompt = f"""You are a highly experienced technical interviewer and hiring manager. Your role is to conduct a realistic professional interview based on:
     - the provided job description 
     - the candidate's profile and experience
     - previous interview responses
     
-    Your objective: Interview the candidate named {name} based on job description and candidate experience
+    Your objective: Interview the candidate named {state.get("candidate_name")} based on job description and candidate experience
     
     Interview behavior:
     - Ask one question at a time.
@@ -80,23 +55,22 @@ def interview_system_prompt():
 
     You have access to:
     - Candidate profile:
-        {profile}
+        {state.get("linkedin_text")}
     - Candidate experience:
-        Use get_all_chunks_formatted tool to get user experience
+        {state.get("exp_text")}
     - Job description:
-        {job_description}
+        {state.get("job_description")}
     Output:
     question: str
     """
     return system_prompt
 
-def evaluator_system_prompt():
-    system_prompt = f"""You are an expert interview evaluation system. Your job is to evaluate a candidate's - {name} interview answers objectively against:
+def evaluator_system_prompt(state):
+    system_prompt = f"""You are an expert interview evaluation system. Your job is to evaluate a candidate's - {state.get("candidate_name")} interview answers objectively against:
     - job description
     - candidate profile
     - industry expectations
-    Your objectives: 1. Assess technical depth 2. Assess leadership and ownership 3. Assess communication clarity 4. Assess problem-solving ability
-    5. Assess alignment with the job description
+    Your objectives: 1. Assess technical depth 2. Assess leadership and ownership 3. Assess communication clarity 4. Assess problem-solving ability 5. Assess alignment with the job description
     
     You must score each answer and provide actionable feedback.
     Evaluation dimensions: 1. Technical Depth 2. Clarity & Structure 3. Relevance to Question 4. Ownership & Impact
@@ -117,9 +91,11 @@ def evaluator_system_prompt():
     3. Suggested improved answer
     
     JOB DESCRIPTION:
-    {job_description}
+    {state.get("job_description")}
     CANDIDATE PROFILE:
-    Use your get_all_chunks_formatted tool to get all experience chunks.
+    {state.get("linkedin_text")}
+    Candidate experience:
+    {state.get("exp_text")}
     ## Output format (always return this exact structure)
     ````json
     {{
@@ -161,10 +137,10 @@ def evaluator_user_prompt(history):
 def run(message, history):
     history = [{"role": h["role"], "content": h["content"]} for h in history]
     messages = [{"role": "system", "content": interview_system_prompt()}] + history + [{"role": "user", "content": message}]
-    openai, model_name = get_model(run_model)
+    openai, model_name = get_model(default_chat_model)
     done = False
     while not done:
-        response = openai.chat.completions.create(model=model_name, messages=messages, tools=tools)
+        response = openai.chat.completions.create(model=model_name, messages=messages)
         message = response.choices[0].message
         print(f'run Reply - {message}')
 
@@ -178,13 +154,13 @@ def run(message, history):
         else:
             done = True
     return response.choices[0].message.content
-def evaluate(history, message):
+def evaluate(history, message, state):
     conversation = [{"role": h["role"], "content": h["content"]} for h in history] + \
                     [{"role": "user", "content": message}]
 
-    messages = [{"role": "system", "content": evaluator_system_prompt()}] + \
+    messages = [{"role": "system", "content": evaluator_system_prompt(state)}] + \
                [{"role": "user", "content": evaluator_user_prompt(conversation)}]
-    openai, model_name = get_model(eval_model)
+    openai, model_name = get_model(default_eval_model)
     done = False
     response = openai.chat.completions.parse(model=model_name, messages=messages, response_format=InterviewEvaluation)
     return response.choices[0].message.parsed
@@ -192,38 +168,20 @@ def evaluate(history, message):
 questions = ["Let's begin the interview. Can you start by telling me a little about yourself and why you're interested in this leadership position at our organization? Please elaborate on your background, experience, and qualifications for the role",
         "That's excellent, Sarada. It sounds like you have a wealth of experience in driving and delivering enterprise-scale multi-cloud platforms, with a strong focus on compliance, regulatory requirements, and business value. Your achievements at JPMorgan Chase & Co., such as enabling 700+ GenAI production use cases and driving cost optimization initiatives, are particularly noteworthy.\n\nI'd like to drill down further into your experience with DevOps and platform engineering. Can you tell me about a specific challenge you faced in your previous role, and how you led your team to overcome it? For example, what was the problem, and how did you go about solving it?",
         "It sounds like you effectively managed a complex initiative with limited clarity, unclear timelines, and a new technology framework that the team was not familiar with. You demonstrated strong leadership skills by setting clear requirements, prioritizing controls, and engaging with stakeholders to achieve consensus.\n\nYour approach of establishing recurring meetings, analyzing priorities, and proposing a solution was prudent. By adopting a BDD (Behavior-Driven Development) framework, you successfully guided your team through the transition.\n\nThe fact that you were able to deliver results within tight timelines and establish the platform as production-ready is impressive. It's clear that you effectively managed risk and uncertainty in this high-pressure situation.\n\nCan you tell me more about how you ensured that the controls and policies were adequate for the business requirements, given the complexity of regulatory environments? How did you balance the need for control with the potential impact on business operations?" ]
-def interview_agent_chat(message, history):
+def interview_agent_chat(message, history, state):
     print(message)
     if not interview_state["started"]:
         interview_state['started'] = True
     runs = interview_state["no_of_questions_asked"]
     print(f"Runs - {runs}")
     if runs == 3:
-        eval_response = evaluate(history, message)
+        eval_response = evaluate(history, message, state)
         print(f'Evaluation result - {eval_response}')
         return str(eval_response)
     else:
-        #reply = run(message, history)
+        #reply = run(message, history, state)
         reply = questions[runs]
         interview_state["no_of_questions_asked"] = interview_state["no_of_questions_asked"] + 1
         if runs == 3:
             reply = reply
         return reply
-
-demo = gr.ChatInterface(
-    chat,
-    title="Interview Simulator",
-    chatbot=gr.Chatbot(
-        value=[
-            {
-                "role":"assistant",
-                "content": chat("Start interview", [])
-            }
-        ]
-    )
-)
-
-
-if __name__ == "__main__":
-    # ONLY the launch command goes here
-    demo.launch()

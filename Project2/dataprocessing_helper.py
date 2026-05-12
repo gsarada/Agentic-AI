@@ -2,9 +2,6 @@ from pypdf import PdfReader, PdfWriter
 from chunk_experience import chunk_experience
 from get_llm_model import default_chat_model
 
-app_state = {}
-
-
 def save_file(name, file):
     try:
         ext = file.split('.')[-1]
@@ -45,6 +42,7 @@ def load_file(name, filename):
 
 
 def process_candidate_data(name: str, linkedin_file, exp_file):
+    app_state = {}
     app_state["candidate_name"] = name
     try:
         # Read LinkedIn profile
@@ -71,9 +69,8 @@ def process_jd(jd_file, state):
         if jd_file is not None:
             with open(jd_file.name, "r", encoding="utf-8") as f:
                 jd_text = f.read()
-            app_state = state
-            app_state["job_description"] = jd_text
+            state["job_description"] = jd_text
     except Exception as e:
         print(f"Exception {e} while processing candidate data")
         return "failed", state
-    return "Success", app_state
+    return "Success", state

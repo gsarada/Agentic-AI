@@ -1,24 +1,21 @@
 from pydantic import BaseModel
 from tools import tools, handle_tool_calls
-from get_llm_model import get_model
+from get_llm_model import get_model, default_chat_model, default_eval_model
 
 class Evaluation(BaseModel):
     acceptable: bool
     reasoning: str
     feedback: str
 
-name = "saradag"
-eval_model = "gemini"
-run_model = "ollama-local"
-
-def chat_system_prompt():
+def chat_system_prompt(state):
+    name = state.get("candidate_name")
     system_prompt = f"""You are acting as {name}, responding to questions on {name}'s personal website. \
     Your role is to represent {name} accurately and compellingly to potential employers or collaborators.
     ## Your context (use this as your ONLY source of truth)
     ### Experience summary: 
-    Use your get_chunks_for_topic tool to get relevant experience chunks.
+     {state.get("exp_text")}
     ### LinkedIn profile:
-            {profile}
+     {state.get("linkedin_text")}
     ---
     ## Rules you must follow
     **Grounding:** Every answer must be built around specific examples, initiatives, metrics, or stories \
@@ -38,13 +35,13 @@ def chat_system_prompt():
     With this context, respond to the user's question, always staying in character as {name}."""
     return system_prompt
 
-def evaluator_system_prompt():
-    system_prompt = f"""You are a strict evaluator assessing whether an AI agent answered an interview or profile question on behalf of {name}.
+def evaluator_system_prompt(state):
+    system_prompt = f"""You are a strict evaluator assessing whether an AI agent answered an interview or profile question on behalf of {state.get("candidate_name")}.
     ## Evaluation context
     ### Experience summary:
-    {experience}
+    {state.get("exp_text")}
     ### LinkedIn profile:
-    {profile} 
+    {state.get("linkedin_text")} 
     ---
     ## Evaluation criteria (check ALL of these) 
     1. **Grounding** — Does every specific claim (metric, tool, initiative, outcome) appear in the context above? Flag \
@@ -53,7 +50,7 @@ def evaluator_system_prompt():
     project, metric, or initiative)? Reject answers that only use generic cloud/tech leadership language.
     3. **Missed context** — Are there stronger, more relevant examples in the provided context that the agent failed to use? If yes, list them explicitly.  
     4. **Persona** — Does the agent speak in first person, open without filler phrases, and avoid ending with questions back to the user?
-    5. **Accuracy** — Does the answer stay within what {name} has actually done? No inflated claims, no role or scope beyond what's documented.
+    5. **Accuracy** — Does the answer stay within what {state.get("candidate_name")} has actually done? No inflated claims, no role or scope beyond what's documented.
     6. **Utility** — Did the agent directly answer the question asked?
     ---
 
@@ -79,19 +76,18 @@ def evaluator_user_prompt(reply, message, history):
     it should use. Do not approve a response that relies on generic language where specific context exists."""
     return user_prompt
 
-def run(message, history):
+def run(message, history, state):
     history = [{"role": h["role"], "content": h["content"]} for h in history]
-    messages = [{"role": "system", "content": chat_system_prompt()}] + history + [{"role": "user", "content": message}]
-    openai, model_name = get_model(run_model)
+    messages = [{"role": "system", "content": chat_system_prompt(state)}] + history + [{"role": "user", "content": message}]
+    openai, model_name = get_model(default_chat_model)
     done = False
     while not done:
-        response = openai.chat.completions.create(model=model_name, messages=messages, tools=tools)
-        finish_reason = response.choices[0].finish_reason
+        response = openai.chat.completions.create(model=model_name, messages=messages)
+        message = response.choices[0].message
 
         # If the LLM wants to call a tool, we do that!
 
-        if finish_reason == "tool_calls":
-            message = response.choices[0].message
+        if message.tool_calls:
             tool_calls = message.tool_calls
             results = handle_tool_calls(tool_calls)
             messages.append(message)
@@ -99,14 +95,14 @@ def run(message, history):
         else:
             done = True
     return response.choices[0].message.content
-def rerun(reply, message, history, eval_response):
-    updated_system_prompt = chat_system_prompt() + f"""The user asked:{message}.--- You gave this answer which was rejected:{reply}---
+def rerun(reply, message, history, eval_response, state):
+    updated_system_prompt = chat_system_prompt(state) + f"""The user asked:{message}.--- You gave this answer which was rejected:{reply}---
     ## Why it was rejected Reasoning: {eval_response.reasoning}--- Feedback: {eval_response.feedback}"""
     messages = [{"role": "system", "content": updated_system_prompt}] + history + [{"role": "user", "content": message}]
-    openai, model_name = get_model(run_model)
+    openai, model_name = get_model(default_chat_model)
     done = False
     while not done:
-        response = openai.chat.completions.create(model=model_name, messages=messages, tools=tools)
+        response = openai.chat.completions.create(model=model_name, messages=messages)
         finish_reason = response.choices[0].finish_reason
 
         # If the LLM wants to call a tool, we do that!
@@ -121,10 +117,10 @@ def rerun(reply, message, history, eval_response):
             done = True
     return response.choices[0].message.content
 
-def evaluate(reply, message, history):
-    messages = [{"role": "system", "content": evaluator_system_prompt()}] + \
+def evaluate(reply, message, history, state):
+    messages = [{"role": "system", "content": evaluator_system_prompt(state)}] + \
                [{"role": "user", "content": evaluator_user_prompt(reply, message, history)}]
-    openai, model_name = get_model(eval_model)
+    openai, model_name = get_model(default_eval_model)
     done = False
     while not done:
         response = openai.chat.completions.parse(model=model_name, messages=messages, response_format=Evaluation)
@@ -142,21 +138,15 @@ def evaluate(reply, message, history):
             done = True
     return response.choices[0].message.parsed
 
-def candidate_agent_chat(message, history):
-    reply = run(message, history)
+def candidate_agent_chat(message, history, state):
+    reply = run(message, history, state)
     print(f'Chat Reply - {reply}')
 
-    eval_response = evaluate(reply, message, history)
+    eval_response = evaluate(reply, message, history, state)
     print(f'Evaluation result - {eval_response}')
     if not eval_response.acceptable:
         print(f'Feedback - {eval_response.reasoning}')
-        reply = rerun(reply, message, history, eval_response)
+        reply = rerun(reply, message, history, eval_response, state)
     else:
         print('The response is valid')
     return reply
-
-demo = gr.ChatInterface(chat, title='Know about my experience')
-
-if __name__ == "__main__":
-    # ONLY the launch command goes here
-    demo.launch()
