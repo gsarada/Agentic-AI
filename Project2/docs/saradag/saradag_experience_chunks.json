@@ -1,100 +1,81 @@
 {
   "chunks": {
-    "Improving Application Security Team Performance": {
-      "label": "Improving BlackDuck Performance",
+    "cloud-asset-discovery": {
+      "label": "Cloud Asset Discovery",
       "keywords": [
-        "blackduck",
-        "security team",
-        "improvement",
-        "-performance",
-        "modern stack"
-      ],
-      "content": [
-        "Upgrading the application to modern stack to improve performance.",
-        "Improving scan times from 8+ hours to 10-15 minutes.",
-        "Implementing real-time API trigger for auto-scanning."
-      ]
-    },
-    "Leadership Development and Promotion": {
-      "label": "Professional Growth as VP and Expert Engineer",
-      "keywords": [
-        "VP",
-        "Expert Engineer",
-        "leadership development",
-        "professional growth",
-        "visibility"
-      ],
-      "content": [
-        "Promotion to VP in 2019.",
-        "Participation in the Expert Engineer program for technical leadership training.",
-        "Leadership opportunities and visibility within JP.",
-        "Growing global team of cloud SREs."
-      ]
-    },
-    "Cloud Engineering and Management": {
-      "label": "Leadership and Development of Cloud Infrastructure",
-      "keywords": [
-        "cloud infrastructure",
-        "AWS",
+        "capture",
+        "inventory",
+        "scalability",
+        "regulatory requirements",
         "Azure",
-        "engineering management",
-        "leadership development"
+        "cloud assets"
       ],
       "content": [
-        "Leading APAC public cloud SRE team on AWS.",
-        "Mentoring global teams of LOB customers.",
-        "Developing self-service capabilities to reduce manual effort."
+        "* Handled the maintenance and feature addition of a cloud asset discovery system used to manage technology lifecycle and configuration drift. * Improved scalability by switching from Azure Logic Apps to Function Aps with full Python capability."
       ]
     },
-    "Chaos Engineering and Platform Enablement": {
-      "label": "Chaos Studio Testing for AI/ML Use Cases",
+    "chaos-engineering": {
+      "label": "Chaos Engineering",
       "keywords": [
         "chaos studio",
-        "AI/ML use cases",
-        "testing",
-        "platform enablement",
-        "platform-wide initiative"
+        "Azure",
+        "CI/CD pipeline",
+        "cross-functional teams",
+        "continuous compliance"
       ],
       "content": [
-        "Enabling Chaos Studio on Azure to improve platform stability and availability.",
-        "Building end-to-end testing scripts using BDD Behavior Framework.",
-        "Testing capabilities increased from 20+ services to 80+, improving platform performance."
+        "* Led the effort to enable Chaos Studio for Azure and built chaos testing scripts, documentation/run books. * Ensured platform stability, availability, and resiliency through comprehensive planning and cross-functional team engagement."
       ]
     },
-    "Continuous Compliance Environment Establishment": {
-      "label": "Continuous Policy Validation for Cloud Assets",
+    "cloud-platform-engineering": {
+      "label": "Cloud Platform Engineering",
       "keywords": [
-        "continuous policy validation",
-        "cloud asset inventory",
-        "Compliance environment establishment",
-        "policies deployment automation",
-        "Cybersecurity"
+        "dev/ops",
+        "hybrid cloud model",
+        "Aqua",
+        "AWS integration with Azure",
+        "cross-functional engineering teams"
       ],
       "content": [
-        "Developing a cohesive continuous compliance and validation pipeline",
-        "Centralized policy repository for easy management and update."
+        "* Led the development of terraform modules for individual service engineers to deploy policies directly from their pipeline. * Ensured continuous compliance through automation of test scripts using github copilot agents."
+      ]
+    },
+    "cloud-security-engineering": {
+      "label": "Cloud Security Engineering",
+      "keywords": [
+        "policy deployment",
+        "CI/CD pipeline",
+        "central repository",
+        "cross-functional teams",
+        "continuous validation"
+      ],
+      "content": [
+        "* Led the effort to establish a continuous compliance environment through policy deployment and CI/CD pipelines. * Improved productivity by enabling individual service engineers to deploy policies directly from their pipeline."
+      ]
+    },
+    "cloud-integrated-cicd": {
+      "label": "Cloud Integrated CI/CD",
+      "keywords": [
+        "Service repo pipeline",
+        "central policy deployment pipeline",
+        "GitHub copilot",
+        "Terraform modules",
+        "cross-functional engineering teams"
+      ],
+      "content": [
+        "* Developed a new approach for service engineers to deploy policies directly from their pipeline, leveraging terraform modules and GitHub copilot agents. * Enhanced productivity and ensured continuous compliance through automated testing."
       ]
     }
   },
   "topic_map": {
-    "Improving Application Security Team Performance": [
-      "challenges_and_optyms",
-      "project_goals"
+    "topic": [
+      "Aqua",
+      "AWS integration with Azure",
+      "Azure"
     ],
-    "Leadership Development and Promotion": [
-      "career_progression",
-      "leadership_opportunities"
-    ],
-    "Cloud Engineering and Management": [
-      "cloud_infrastructure",
-      "lead_management"
-    ],
-    "Chaos Engineering and Platform Enablement": [
-      "chaos_engineering",
-      "platform_enablement"
-    ],
-    "Continuous Compliance Environment Establishment": [
-      "continuous_compliance"
+    "category": [
+      "cloud-as-a-service",
+      "engineering"
     ]
   }
 }

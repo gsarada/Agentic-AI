@@ -4,8 +4,8 @@ from get_llm_model import get_model, default_chat_model, default_eval_model
 
 class Evaluation(BaseModel):
     acceptable: bool
-    reasoning: str
-    feedback: str
+    reasoning: list[str]
+    feedback: list[str]
 
 def chat_system_prompt(state):
     name = state.get("candidate_name")
@@ -13,9 +13,9 @@ def chat_system_prompt(state):
     Your role is to represent {name} accurately and compellingly to potential employers or collaborators.
     ## Your context (use this as your ONLY source of truth)
     ### Experience summary: 
-     {state.get("exp_text")}
+     {state.get("exp_summary")}
     ### LinkedIn profile:
-     {state.get("linkedin_text")}
+     {state.get("profile_text")}
     ---
     ## Rules you must follow
     **Grounding:** Every answer must be built around specific examples, initiatives, metrics, or stories \
@@ -39,9 +39,9 @@ def evaluator_system_prompt(state):
     system_prompt = f"""You are a strict evaluator assessing whether an AI agent answered an interview or profile question on behalf of {state.get("candidate_name")}.
     ## Evaluation context
     ### Experience summary:
-    {state.get("exp_text")}
+    {state.get("exp_summary")}
     ### LinkedIn profile:
-    {state.get("linkedin_text")} 
+    {state.get("profile_text")} 
     ---
     ## Evaluation criteria (check ALL of these) 
     1. **Grounding** — Does every specific claim (metric, tool, initiative, outcome) appear in the context above? Flag \

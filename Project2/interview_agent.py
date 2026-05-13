@@ -25,7 +25,8 @@ class InterviewEvaluation(BaseModel):
 # Global interview state
 interview_state = {
     "no_of_questions_asked": 0,
-    "started": False
+    "started": False,
+    "no of rounds": 0
 }
 
 def interview_system_prompt(state):
@@ -55,9 +56,9 @@ def interview_system_prompt(state):
 
     You have access to:
     - Candidate profile:
-        {state.get("linkedin_text")}
+        {state.get("profile_text")}
     - Candidate experience:
-        {state.get("exp_text")}
+        {state.get("exp_summary")}
     - Job description:
         {state.get("job_description")}
     Output:
@@ -93,9 +94,9 @@ def evaluator_system_prompt(state):
     JOB DESCRIPTION:
     {state.get("job_description")}
     CANDIDATE PROFILE:
-    {state.get("linkedin_text")}
+    {state.get("profile_text")}
     Candidate experience:
-    {state.get("exp_text")}
+    {state.get("exp_summary")}
     ## Output format (always return this exact structure)
     ````json
     {{
@@ -169,7 +170,8 @@ questions = ["Let's begin the interview. Can you start by telling me a little ab
         "That's excellent, Sarada. It sounds like you have a wealth of experience in driving and delivering enterprise-scale multi-cloud platforms, with a strong focus on compliance, regulatory requirements, and business value. Your achievements at JPMorgan Chase & Co., such as enabling 700+ GenAI production use cases and driving cost optimization initiatives, are particularly noteworthy.\n\nI'd like to drill down further into your experience with DevOps and platform engineering. Can you tell me about a specific challenge you faced in your previous role, and how you led your team to overcome it? For example, what was the problem, and how did you go about solving it?",
         "It sounds like you effectively managed a complex initiative with limited clarity, unclear timelines, and a new technology framework that the team was not familiar with. You demonstrated strong leadership skills by setting clear requirements, prioritizing controls, and engaging with stakeholders to achieve consensus.\n\nYour approach of establishing recurring meetings, analyzing priorities, and proposing a solution was prudent. By adopting a BDD (Behavior-Driven Development) framework, you successfully guided your team through the transition.\n\nThe fact that you were able to deliver results within tight timelines and establish the platform as production-ready is impressive. It's clear that you effectively managed risk and uncertainty in this high-pressure situation.\n\nCan you tell me more about how you ensured that the controls and policies were adequate for the business requirements, given the complexity of regulatory environments? How did you balance the need for control with the potential impact on business operations?" ]
 def interview_agent_chat(message, history, state):
-    print(message)
+    if state is None:
+        return None
     if not interview_state["started"]:
         interview_state['started'] = True
     runs = interview_state["no_of_questions_asked"]
@@ -177,11 +179,15 @@ def interview_agent_chat(message, history, state):
     if runs == 3:
         eval_response = evaluate(history, message, state)
         print(f'Evaluation result - {eval_response}')
+        interview_state["no_of_questions_asked"] = 0
+        interview_state["no_of_rounds"] = interview_state["no_of_rounds"] + 1
         return str(eval_response)
     else:
+        if interview_state["no_of_rounds"] == 1:
+            reply = "You have reached limits. Try again tomorrow"
         #reply = run(message, history, state)
         reply = questions[runs]
         interview_state["no_of_questions_asked"] = interview_state["no_of_questions_asked"] + 1
-        if runs == 3:
-            reply = reply
+        #if runs == 3:
+            #reply = reply
         return reply

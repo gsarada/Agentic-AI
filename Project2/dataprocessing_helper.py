@@ -1,11 +1,16 @@
+import os
 from pypdf import PdfReader, PdfWriter
 from chunk_experience import chunk_experience
 from get_llm_model import default_chat_model
 
-def save_file(name, file):
+def save_file(name, file, is_profile):
     try:
         ext = file.split('.')[-1]
-        file_path = f"docs/{name}/{file.name}"
+        if is_profile:
+            filename = f"profile.{ext}"
+        else:
+            filename = f"experience.{ext}"
+        file_path = f"docs/{name}/{filename}"
         if ext == 'pdf':
             reader = PdfReader(file)
             writer = PdfWriter()
@@ -27,50 +32,61 @@ def save_file(name, file):
 
 
 def load_file(name, filename):
-    ext = filename.split('.')[-1]
+    file_path = f"docs/{name}/{filename}"
+    print(f"Loading file {file_path}")
+    # Check if file exists
+    if not os.path.exists(file_path):
+        return "File not found."
+
+    # Get the file extension
+    file_extension = filename.split('.')[-1]
+    print(file_extension)
     final_text = ""
-    if ext == 'pdf':
-        reader = PdfReader(f"docs/{name}/{filename}")
+    if file_extension == 'pdf':
+        reader = PdfReader(file_path)
         for page in reader.pages:
             text = page.extract_text()
             if text:
                 final_text += text
     else:
-        with open(f"docs/{name}/{filename}", "r", encoding="utf-8") as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             final_text = f.read()
     return final_text
 
 
-def process_candidate_data(name: str, linkedin_file, exp_file):
+def process_candidate_data(name: str, linkedin_file, exp_file, jd_file):
     app_state = {}
-    app_state["candidate_name"] = name
+    if name is None:
+        return "Candidate name is mandatory", app_state
+    app_state["name"] = name
     try:
         # Read LinkedIn profile
-        if linkedin_file is not None:
+        if linkedin_file:
             with open(linkedin_file.name, "r", encoding="utf-8") as f:
-                linkedin_text = f.read()
-            save_file(name, linkedin_file)
-            app_state["linkedin_text"] = linkedin_text
+                profile_text = f.read()
+            save_file(name, linkedin_file, True)
+        else:
+            profile_text = load_file(name, "profile.pdf")
+        app_state["profile_text"] = profile_text
 
         # Read Resume
-        if exp_file is not None:
+        if exp_file:
             with open(exp_file.name, "r", encoding="utf-8") as f:
-                exp_text = f.read()
-            save_file(name, exp_file)
-            app_state["exp_text"] = chunk_experience(exp_text, model_name=default_chat_model, name=name)
+                exp_summary = f.read()
+            save_file(name, exp_file, False)
+        else:
+            exp_summary = load_file(name, "experience.txt")
+        exp_summary = str(chunk_experience(exp_summary, model_name=default_chat_model, name=name))
+        app_state["exp_summary"] = exp_summary
+
+        # Read JD
+        if jd_file:
+            with open(jd_file.name, "r", encoding="utf-8") as f:
+                jd_text = f.read()
+            app_state["job_description"] = jd_text
+
     except Exception as e:
         print(f"Exception {e} while processing candidate data")
         return "failed", {}
-    return "Success", app_state
 
-def process_jd(jd_file, state):
-    try:
-        # Read jd file
-        if jd_file is not None:
-            with open(jd_file.name, "r", encoding="utf-8") as f:
-                jd_text = f.read()
-            state["job_description"] = jd_text
-    except Exception as e:
-        print(f"Exception {e} while processing candidate data")
-        return "failed", state
-    return "Success", state
+    return "Success", app_state

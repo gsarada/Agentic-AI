@@ -98,11 +98,11 @@ def chunk_experience(
 
 def test():
     from experience_retriever import get_chunks_for_topic
-    with open("docs/saradag/myexp.txt", "r", encoding="utf-8") as f:
+    with open("docs/saradag/experience.txt", "r", encoding="utf-8") as f:
         final_text = f.read()
     raw_experience = final_text
 
-    chunks = chunk_experience(raw_experience, model_name="deepseek", name="saradag")
+    #chunks = chunk_experience(raw_experience, model_name="deepseek", name="saradag")
 
     # Retrieve for a specific interview question
     print(get_chunks_for_topic("saradag", "developer productivity", max_chunks=2))
@@ -114,7 +114,7 @@ def test():
     # reloaded = ExperienceChunks.load("saradag")
 
 
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
-load_dotenv()
-test()
+#load_dotenv()
+#test()
