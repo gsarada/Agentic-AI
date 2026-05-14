@@ -8,7 +8,7 @@ class Evaluation(BaseModel):
     feedback: list[str]
 
 def chat_system_prompt(state):
-    name = state.get("candidate_name")
+    name = state.get("name")
     system_prompt = f"""You are acting as {name}, responding to questions on {name}'s personal website. \
     Your role is to represent {name} accurately and compellingly to potential employers or collaborators.
     ## Your context (use this as your ONLY source of truth)
@@ -36,7 +36,7 @@ def chat_system_prompt(state):
     return system_prompt
 
 def evaluator_system_prompt(state):
-    system_prompt = f"""You are a strict evaluator assessing whether an AI agent answered an interview or profile question on behalf of {state.get("candidate_name")}.
+    system_prompt = f"""You are a strict evaluator assessing whether an AI agent answered an interview or profile question on behalf of {state.get("name")}.
     ## Evaluation context
     ### Experience summary:
     {state.get("exp_summary")}
@@ -50,7 +50,7 @@ def evaluator_system_prompt(state):
     project, metric, or initiative)? Reject answers that only use generic cloud/tech leadership language.
     3. **Missed context** — Are there stronger, more relevant examples in the provided context that the agent failed to use? If yes, list them explicitly.  
     4. **Persona** — Does the agent speak in first person, open without filler phrases, and avoid ending with questions back to the user?
-    5. **Accuracy** — Does the answer stay within what {state.get("candidate_name")} has actually done? No inflated claims, no role or scope beyond what's documented.
+    5. **Accuracy** — Does the answer stay within what {state.get("name")} has actually done? No inflated claims, no role or scope beyond what's documented.
     6. **Utility** — Did the agent directly answer the question asked?
     ---
 
@@ -94,7 +94,7 @@ def run(message, history, state):
             messages.extend(results)
         else:
             done = True
-    return response.choices[0].message.content
+    return message.content
 def rerun(reply, message, history, eval_response, state):
     updated_system_prompt = chat_system_prompt(state) + f"""The user asked:{message}.--- You gave this answer which was rejected:{reply}---
     ## Why it was rejected Reasoning: {eval_response.reasoning}--- Feedback: {eval_response.feedback}"""
@@ -103,19 +103,18 @@ def rerun(reply, message, history, eval_response, state):
     done = False
     while not done:
         response = openai.chat.completions.create(model=model_name, messages=messages)
-        finish_reason = response.choices[0].finish_reason
+        message = response.choices[0].message
 
         # If the LLM wants to call a tool, we do that!
 
-        if finish_reason == "tool_calls":
-            message = response.choices[0].message
+        if message.tool_calls:
             tool_calls = message.tool_calls
             results = handle_tool_calls(tool_calls)
             messages.append(message)
             messages.extend(results)
         else:
             done = True
-    return response.choices[0].message.content
+    return message.content
 
 def evaluate(reply, message, history, state):
     messages = [{"role": "system", "content": evaluator_system_prompt(state)}] + \
@@ -124,21 +123,25 @@ def evaluate(reply, message, history, state):
     done = False
     while not done:
         response = openai.chat.completions.parse(model=model_name, messages=messages, response_format=Evaluation)
-        finish_reason = response.choices[0].finish_reason
+        message = response.choices[0].message
 
         # If the LLM wants to call a tool, we do that!
 
-        if finish_reason == "tool_calls":
-            message = response.choices[0].message
+        if message.tool_calls:
             tool_calls = message.tool_calls
             results = handle_tool_calls(tool_calls)
             messages.append(message)
             messages.extend(results)
         else:
             done = True
-    return response.choices[0].message.parsed
+    return message.parsed
 
+max_rounds = 1
 def candidate_agent_chat(message, history, state):
+    print(f"State in candidate agent - {state}")
+    rounds = state["candidate_agent"]["rounds"]
+    if rounds == max_rounds:
+        reply = "You have reached limits. Please try again tomorrow", state
     reply = run(message, history, state)
     print(f'Chat Reply - {reply}')
 
@@ -149,4 +152,4 @@ def candidate_agent_chat(message, history, state):
         reply = rerun(reply, message, history, eval_response, state)
     else:
         print('The response is valid')
-    return reply
+    return reply, state

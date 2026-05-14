@@ -1,27 +1,37 @@
 import gradio as gr
 from dotenv import load_dotenv
+from enum import Enum
 from dataprocessing_helper import process_candidate_data
 from interview_agent import interview_agent_chat
 from candidate_agent import candidate_agent_chat
 
 load_dotenv(override=True)
-personas = {"Candidate Agent": "You interview me", "Interview Agent": "I will interview you"}
+
+class Personas(Enum):
+    CANDIDATE = "Candidate Persona"
+    INTERVIEWER = "Interviewer Persona"
 
 def is_valid_state(state, mode):
     print(f"State - {state}, mode- {mode}")
-    if not state:
-        return False, "Enter candidate name, upload linkedin profile or resume, " \
-                      "experience summary and job description and then select mode to proceed"
+    if state.get("name", "") == "":
+        return False, "## Name is mandatory"
+    if mode is None:
+        return False, "## Select agent persona"
     if state.get("exp_summary") is None and state.get("profile_text") is None:
-        return False, "Upload atleast one of profile or experience summary to proceed"
-    if mode == "Interview Agent" and state.get("job_description") is None:
-        return False, "Upload Job description to proceed"
+        return False, "## Upload atleast one of profile or experience summary to proceed"
+    if mode == Personas.INTERVIEWER.name and state.get("job_description") is None:
+        return False, "## Upload Job description to proceed"
     return True, ""
 
 with gr.Blocks() as demo:
 
+    # Shared app state
+    app_state = gr.State({"interview_agent": {"rounds": 0, "questions": 0},
+                          "candidate_agent": {"rounds": 0, "answers": 0}})
+
     # Shared onboarding section
     with gr.Sidebar():
+        onboarding_status = gr.Markdown()
 
         name = gr.Textbox(label="Name")
 
@@ -32,7 +42,7 @@ with gr.Blocks() as demo:
         )
 
         experience_summary = gr.File(
-            label="Experience Summary in your own words",
+            label="Upload Experience Summary",
             file_types=[".pdf", ".txt"],
             height=110
         )
@@ -44,11 +54,7 @@ with gr.Blocks() as demo:
         )
 
         submit_btn = gr.Button("Submit")
-
-        onboarding_status = gr.Markdown()
-
-    # Shared app state
-    app_state = gr.State({})
+        mode = gr.Radio([Personas.CANDIDATE.name, Personas.INTERVIEWER.name], label="Select Agent Persona")
 
     # Process onboarding data
     submit_btn.click(
@@ -57,7 +63,8 @@ with gr.Blocks() as demo:
             name,
             linkedin,
             experience_summary,
-            job_description
+            job_description,
+            app_state
         ],
         outputs=[
             onboarding_status,
@@ -65,32 +72,27 @@ with gr.Blocks() as demo:
         ]
     )
 
-    mode = gr.Radio(["Candidate Agent", "Interviewer Agent"], label="Select Agent")
+    gr.Markdown("# Welcome to RoleCraft AI - An adaptive AI interview platform ")
 
-    @gr.render(inputs=[app_state, mode])
-    def dynamic_interface(state, selection):
+    dynamic_area = gr.Column()
+    @gr.render(inputs=[mode, app_state])
+    def dynamic_interface(selection, state):
         status, reason = is_valid_state(state, selection)
-
+        print(f"Status- {status}, Reason- {reason}")
         # Candidate Persona Agent
-        if status and selection == "Candidate Agent":
+        if status and selection == Personas.CANDIDATE.name:
             gr.ChatInterface(
                 fn=candidate_agent_chat,
-                additional_inputs=app_state
+                additional_inputs=app_state,
+                additional_outputs=app_state
             )
-        elif status and selection == "Interviewer Agent":
+        elif status and selection == Personas.INTERVIEWER.name:
             gr.ChatInterface(
                 fn=interview_agent_chat,
                 additional_inputs=app_state,
-                chatbot=gr.Chatbot(
-                    value=[
-                        {
-                            "role":"assistant",
-                            "content": interview_agent_chat("Start interview", [], app_state)
-                        }
-                    ]
-                )
+                additional_outputs=app_state,
             )
         else:
-             gr.Markdown(reason)
+            gr.Markdown(reason)
 
 demo.launch()

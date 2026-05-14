@@ -1,81 +1,102 @@
 {
   "chunks": {
-    "cloud-asset-discovery": {
-      "label": "Cloud Asset Discovery",
+    "application_security_team": {
+      "label": "Application Security Team",
       "keywords": [
-        "capture",
-        "inventory",
-        "scalability",
-        "regulatory requirements",
-        "Azure",
-        "cloud assets"
+        "blackduck",
+        "open source scanning tool",
+        "modern stack",
+        "CI/CD pipelines",
+        "security controls"
       ],
       "content": [
-        "* Handled the maintenance and feature addition of a cloud asset discovery system used to manage technology lifecycle and configuration drift. * Improved scalability by switching from Azure Logic Apps to Function Aps with full Python capability."
+        "upgraded application to modern stack",
+        "designed system to meet thousands scans per day and reduce overall scan time"
       ]
     },
-    "chaos-engineering": {
-      "label": "Chaos Engineering",
+    "vp_role": {
+      "label": "VP Role",
       "keywords": [
-        "chaos studio",
-        "Azure",
-        "CI/CD pipeline",
-        "cross-functional teams",
-        "continuous compliance"
+        "leadership training",
+        "expert engineer program",
+        "APAC public cloud SRE team",
+        "cloud party event",
+        "Azure consulting"
       ],
       "content": [
-        "* Led the effort to enable Chaos Studio for Azure and built chaos testing scripts, documentation/run books. * Ensured platform stability, availability, and resiliency through comprehensive planning and cross-functional team engagement."
+        "led APAC public cloud SRE team",
+        "taught Azure to customers and team members through support tickets and self-service system"
       ]
     },
-    "cloud-platform-engineering": {
+    "cloud_platform_engineering": {
       "label": "Cloud Platform Engineering",
       "keywords": [
-        "dev/ops",
+        "AWS cloud enablement",
         "hybrid cloud model",
-        "Aqua",
-        "AWS integration with Azure",
-        "cross-functional engineering teams"
+        "Azure integration",
+        "chaos engineering",
+        "system of record"
       ],
       "content": [
-        "* Led the development of terraform modules for individual service engineers to deploy policies directly from their pipeline. * Ensured continuous compliance through automation of test scripts using github copilot agents."
+        "enabled APAC region for Azure cloud with chaos studio and system of record"
       ]
     },
-    "cloud-security-engineering": {
-      "label": "Cloud Security Engineering",
+    "system_of_record_initiative": {
+      "label": "System of Record Initiative",
       "keywords": [
-        "policy deployment",
-        "CI/CD pipeline",
-        "central repository",
-        "cross-functional teams",
-        "continuous validation"
+        "cloud asset inventory",
+        "Azure logic app integration",
+        "Python full capability",
+        "delta feed design",
+        "Continuous Compliance Environment"
       ],
       "content": [
-        "* Led the effort to establish a continuous compliance environment through policy deployment and CI/CD pipelines. * Improved productivity by enabling individual service engineers to deploy policies directly from their pipeline."
+        "captured and inventoried all cloud assets with new delta feed design"
       ]
     },
-    "cloud-integrated-cicd": {
-      "label": "Cloud Integrated CI/CD",
+    "chaos_studio_integration": {
+      "label": "Chaos Studio Integration",
       "keywords": [
-        "Service repo pipeline",
-        "central policy deployment pipeline",
-        "GitHub copilot",
-        "Terraform modules",
-        "cross-functional engineering teams"
+        "Gremlin tool integration",
+        "AI-powered testing",
+        "GitHub copilot agents",
+        "centralized testing service",
+        "real-time validation"
       ],
       "content": [
-        "* Developed a new approach for service engineers to deploy policies directly from their pipeline, leveraging terraform modules and GitHub copilot agents. * Enhanced productivity and ensured continuous compliance through automated testing."
+        "enabled real-time testing and validation of platform components"
+      ]
+    },
+    "productivity_and_quality_improvement": {
+      "label": "Productivity and Quality Improvement",
+      "keywords": [
+        "agile methodology adoption",
+        "GitHub copilot agents",
+        "centralized policy deployment pipeline",
+        "continuous compliance environment",
+        "CI/CD automation"
+      ],
+      "content": [
+        "adopted GitHub copilot agents and streamlined testing process"
       ]
     }
   },
   "topic_map": {
-    "topic": [
-      "Aqua",
-      "AWS integration with Azure",
-      "Azure"
+    "Application Security Team Leadership": [
+      "application_security_team"
     ],
-    "category": [
-      "cloud-as-a-service",
-      "engineering"
+    "Leadership Training and Expertise": [
+      "vp_role"
+    ],
+    "Cloud Platform Engineering and Enablement": [
+      "cloud_platform_engineering"
+    ],
+    "Azure Integration and Implementation": [
+      "system_of_record_initiative",
+      "chaos_studio_integration"
+    ],
+    "Continuous Improvement and Quality Assurance": [
+      "productivity_and_quality_improvement"
     ]
   }
 }
