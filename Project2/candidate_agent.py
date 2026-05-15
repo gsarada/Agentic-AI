@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from tools import tools, handle_tool_calls
 from get_llm_model import get_model, default_chat_model, default_eval_model
 
+
+max_answers = 3
 class Evaluation(BaseModel):
     acceptable: bool
     reasoning: list[str]
@@ -136,20 +138,19 @@ def evaluate(reply, message, history, state):
             done = True
     return message.parsed
 
-max_rounds = 1
 def candidate_agent_chat(message, history, state):
-    print(f"State in candidate agent - {state}")
+    # print(f"State in candidate agent - {state}")
     rounds = state["candidate_agent"]["rounds"]
-    if rounds == max_rounds:
-        reply = "You have reached limits. Please try again tomorrow", state
-    reply = run(message, history, state)
-    print(f'Chat Reply - {reply}')
-
-    eval_response = evaluate(reply, message, history, state)
-    print(f'Evaluation result - {eval_response}')
-    if not eval_response.acceptable:
-        print(f'Feedback - {eval_response.reasoning}')
-        reply = rerun(reply, message, history, eval_response, state)
+    answers_given = state["candidate_agent"]["answers"]
+    if answers_given == max_answers:
+        state["candidate_agent"]["rounds"] = rounds + 1
+        reply = "I have reached the limits. Please try again later"
     else:
-        print('The response is valid')
+        reply = run(message, history, state)
+        eval_response = evaluate(reply, message, history, state)
+        print(f'Evaluation result - {eval_response}')
+        if not eval_response.acceptable:
+            reply = rerun(reply, message, history, eval_response, state)
+        state["candidate_agent"]["answers"] = answers_given + 1
+    print(f'Chat Reply - {reply}')
     return reply, state

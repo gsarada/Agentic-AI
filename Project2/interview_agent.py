@@ -1,28 +1,6 @@
-from pydantic import BaseModel
-from typing import List
 from tools import tools, handle_tool_calls
 from get_llm_model import get_model, default_eval_model, default_chat_model
 
-class Dimension(BaseModel):
-    technical_depth: int
-    clarity: int
-    ownership: int
-    communication: int
-    relevance: int
-
-class QuestionEvaluation(BaseModel):
-    question: str
-    overall_score: int
-    dimensions: Dimension
-    strengths: List[str]
-    weaknesses: List[str]
-    suggestion: str
-
-class InterviewEvaluation(BaseModel):
-    candidate_level: str
-    evaluation: List[QuestionEvaluation]
-
-max_rounds = 1
 max_questions = 3
 
 def interview_system_prompt(state):
@@ -97,7 +75,7 @@ def evaluator_system_prompt(state):
     ## Output format (always return this exact structure)
     ````json
     {{
-      "candidate_level": "weak | medium | strong based on the overall_score for each question",
+      "candidate_level": "weak | medium | strong, based on the overall_score for each question",
       "evaluation": [
         {{
           "question": "Question being evaluated",
@@ -151,7 +129,7 @@ def run(message, history, state):
             messages.extend(results)
         else:
             done = True
-    return response.choices[0].message.content
+    return message.content
 def evaluate(history, message, state):
     conversation = [{"role": h["role"], "content": h["content"]} for h in history] + \
                     [{"role": "user", "content": message}]
@@ -159,28 +137,26 @@ def evaluate(history, message, state):
     messages = [{"role": "system", "content": evaluator_system_prompt(state)}] + \
                [{"role": "user", "content": evaluator_user_prompt(conversation)}]
     openai, model_name = get_model(default_eval_model)
-    done = False
-    response = openai.chat.completions.parse(model=model_name, messages=messages, response_format=InterviewEvaluation)
-    return response.choices[0].message.parsed
+    response = openai.chat.completions.create(model=model_name, messages=messages)
+    return response.choices[0].message.content
 
 questions = ["Let's begin the interview. Can you start by telling me a little about yourself and why you're interested in this leadership position at our organization? Please elaborate on your background, experience, and qualifications for the role",
         "That's excellent, Sarada. It sounds like you have a wealth of experience in driving and delivering enterprise-scale multi-cloud platforms, with a strong focus on compliance, regulatory requirements, and business value. Your achievements at JPMorgan Chase & Co., such as enabling 700+ GenAI production use cases and driving cost optimization initiatives, are particularly noteworthy.\n\nI'd like to drill down further into your experience with DevOps and platform engineering. Can you tell me about a specific challenge you faced in your previous role, and how you led your team to overcome it? For example, what was the problem, and how did you go about solving it?",
         "It sounds like you effectively managed a complex initiative with limited clarity, unclear timelines, and a new technology framework that the team was not familiar with. You demonstrated strong leadership skills by setting clear requirements, prioritizing controls, and engaging with stakeholders to achieve consensus.\n\nYour approach of establishing recurring meetings, analyzing priorities, and proposing a solution was prudent. By adopting a BDD (Behavior-Driven Development) framework, you successfully guided your team through the transition.\n\nThe fact that you were able to deliver results within tight timelines and establish the platform as production-ready is impressive. It's clear that you effectively managed risk and uncertainty in this high-pressure situation.\n\nCan you tell me more about how you ensured that the controls and policies were adequate for the business requirements, given the complexity of regulatory environments? How did you balance the need for control with the potential impact on business operations?" ]
 def interview_agent_chat(message, history, state):
-    print(f"State in interview agent- {state}")
     questions_asked = state["interview_agent"]["questions"]
     rounds = state["interview_agent"]["rounds"]
     print(f"rounds - {rounds}, questions_asked - {questions_asked}")
-    if rounds == max_rounds:
-        return "You have reached limits. Please try again tomorrow", state
     if questions_asked == max_questions:
         eval_response = evaluate(history, message, state)
         print(f'Evaluation result - {eval_response}')
         state["interview_agent"]["questions"] = 0
         state["interview_agent"]["rounds"] = rounds + 1
-        return str(eval_response), state
+        response = f"###Thanks for answering the questions. We will conclude the interview now. Below is the evaluation of your answers \n {eval_response}"
     else:
         #reply = run(message, history, state)
         reply = questions[questions_asked]
         state["interview_agent"]["questions"] = questions_asked + 1
-        return reply, state
+        response = reply
+    print(f"Reply = {response}")
+    return response, state

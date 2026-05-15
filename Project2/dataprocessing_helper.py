@@ -42,11 +42,10 @@ def load_file(name, filename):
     print(f"Loading file {file_path}")
     # Check if file exists
     if not os.path.exists(file_path):
-        return "File not found."
+        return ""
 
     # Get the file extension
     file_extension = filename.split('.')[-1]
-    print(file_extension)
     final_text = ""
     if file_extension == 'pdf':
         reader = PdfReader(file_path)
@@ -63,15 +62,16 @@ def load_file(name, filename):
 def process_candidate_data(name: str, linkedin_file, exp_file, jd_file, state):
     app_state = state
     print(app_state)
-    app_state["name"] = name if name else app_state["name"]
-    if app_state["name"] is None:
-        return "## Candidate name is mandatory", app_state
+    if name:
+        app_state["name"] = name
     try:
         # Read LinkedIn profile
-        if linkedin_file:
-            with open(linkedin_file.name, "r", encoding="utf-8") as f:
+        if linkedin_file.get("files"):
+            with open(linkedin_file["files"][0], "r", encoding="utf-8") as f:
                 profile_text = f.read()
-            save_file(name, linkedin_file, True)
+            save_file(name, linkedin_file["files"][0], True)
+        elif linkedin_file.get("text"):
+            profile_text = linkedin_file["text"]
         elif app_state.get("profile_text", "") != "":
             print("Profile already present in state")
             profile_text = app_state["profile_text"]
@@ -80,11 +80,13 @@ def process_candidate_data(name: str, linkedin_file, exp_file, jd_file, state):
         app_state["profile_text"] = profile_text
 
         # Read Resume
-        if exp_file:
-            with open(exp_file.name, "r", encoding="utf-8") as f:
+        if exp_file.get("files"):
+            with open(exp_file["files"][0], "r", encoding="utf-8") as f:
                 exp_summary = f.read()
             exp_summary = str(chunk_experience(exp_summary, model_name=default_chat_model, name=name))
-            save_file(name, exp_file, False)
+            save_file(name, exp_file["files"][0], False)
+        elif exp_file.get("text"):
+            exp_summary = exp_file["text"]
         elif app_state.get("exp_summary", "") != "":
             exp_summary = app_state["exp_summary"]
             print("Experience already present in state")
@@ -95,13 +97,15 @@ def process_candidate_data(name: str, linkedin_file, exp_file, jd_file, state):
         app_state["exp_summary"] = exp_summary
 
         # Read JD
-        if jd_file:
-            with open(jd_file.name, "r", encoding="utf-8") as f:
+        if jd_file.get("files"):
+            with open(jd_file["files"][0], "r", encoding="utf-8") as f:
                 jd_text = f.read()
             app_state["job_description"] = jd_text
+        elif jd_file.get("text"):
+            app_state["job_description"] = jd_file["text"]
 
     except Exception as e:
         print(f"Exception {e} while processing candidate data")
         return "## Failure while processing files", {}
 
-    return "## File processing successful.", app_state
+    return "## Data has been processed successfully.", app_state
