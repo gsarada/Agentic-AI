@@ -5,3 +5,7 @@ As part of enabling Azure platform it was required to apply controls onto the pl
 
 
 We certainly had to build controls and apply them based on the application classification. The platform is designed to have a hierarchical organization/management group structure where depending on the different controls platform had to support like HCD, PCIDSS, NIST etc, the minimal mandatory controls were enforced at the root level. The remaining controls were applied at the children level dependning on the control category requirements. The business applications would be provisioned accounts under the appropriate org so only the applicable controls are enforced without impacting the business operations.
+
+
+
+T
