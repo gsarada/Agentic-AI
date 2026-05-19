@@ -9,7 +9,7 @@ models_key_list = [{'name': 'openai', 'key': None, 'base_url': None, 'model_name
     {'name': 'groq', 'key': 'GROQ_API_KEY', 'base_url': 'https://api.groq.com/openai/v1', 'model_name': 'openai/gpt-oss-120b'},
     {'name': 'ollama-local', 'key': 'OLLAMA', 'base_url': 'http://localhost:11434/v1/', 'model_name': 'llama3.2'}]
 
-default_chat_model = "ollama-local"
+default_chat_model = "gemini"
 default_eval_model = "groq"
 
 def get_model(name):

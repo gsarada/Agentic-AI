@@ -7,18 +7,19 @@ load_dotenv(override=True)
 
 def init(mode):
     print(f"Mode - {mode}")
-    value = [{"role": "assistant", "content": "Welcome! Please submit your details in the sidebar and then choose persona"}]
+    if mode is None:
+        value = [{"role": "assistant", "content": "Welcome! Get started by submitting your profile details in the sidebar and then choose persona"}]
     if mode == Personas.INTERVIEWER.name:
-        value = [{"role": "assistant", "content": "I will now act as your interview panel. Type 'Start Interview' and submit to begin."}]
+        value = [{"role": "assistant", "content": f"You have chosen {mode} persona. Please type 'Start' and submit to begin."}]
     elif mode == Personas.CANDIDATE.name:
-        value = [{"role": "assistant", "content": "I will now be wearing your hat :-). Ask your questions as an Interviewer."}]
+        value = [{"role": "assistant", "content": f"You have chosen {mode} persona. Please start asking questions."}]
     return value
 def set_mode(mode, state):
     state["persona"] = mode
     value = init(mode)
     return state, value
 
-with gr.Blocks() as demo:
+with gr.Blocks(fill_height=True) as demo:
     # Shared app state
     app_state = gr.State({"interview_agent": {"rounds": 0, "questions": 0},
                           "candidate_agent": {"rounds": 0, "answers": 0}, "persona": None})
@@ -30,27 +31,30 @@ with gr.Blocks() as demo:
         name = gr.Textbox(label="Name")
 
         linkedin = gr.MultimodalTextbox(
-            value="Enter text..",
+            placeholder="Enter text..",
             sources="upload",
             file_types=[".pdf"],
             label="Upload Profile/Resume",
-            submit_btn=False
+            submit_btn=False,
+            max_plain_text_length=5000
         )
 
         experience_summary = gr.MultimodalTextbox(
-            value="Enter text..",
+            placeholder="Enter text..",
             sources="upload",
             file_types=[".txt"],
             label="Upload experience summary",
-            submit_btn=False
+            submit_btn=False,
+            max_plain_text_length=5000
         )
 
         job_description = gr.MultimodalTextbox(
-            value="Enter text..",
+            placeholder="Enter text..",
             sources="upload",
             file_types=[".txt"],
             label="Upload Job Description",
-            submit_btn=False
+            submit_btn=False,
+            max_plain_text_length=5000
         )
 
         submit_btn = gr.Button("Submit")

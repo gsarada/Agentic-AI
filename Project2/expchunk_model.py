@@ -4,9 +4,9 @@ expchunk_model.py
 Pydantic models for structured experience chunks,
 with parsing, and retrieval helpers.
 """
-
 from __future__ import annotations
 from typing import Annotated
+import os
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -61,16 +61,26 @@ class ExperienceChunks(BaseModel):
     # ── Retrieval helpers ────────────────────────────────────────────────────
 
     def save(self, name: str) -> None:
-        path = f"docs/{name}/{name}_experience_chunks.json"
-        with open(path, "w") as f:
-            f.write(self.model_dump_json(indent=2))
+        path = f"docs/{name}/experience_chunks.json"
+        try:
+            directory = os.path.dirname(path)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            with open(path, "w") as f:
+                f.write(self.model_dump_json(indent=2))
+        except Exception as e:
+            print(f"Exception {e} occurred while saving experience chunks")
+            raise e
+
 
     @classmethod
     def load(cls, name: str) -> ExperienceChunks:
-        path = f"docs/{name}/{name}_experience_chunks.json"
+        path = f"docs/{name}/experience_chunks.json"
         try:
+            if not os.path.exists(path):
+                return None
             with open(path) as f:
                 return cls.model_validate_json(f.read())
         except Exception as e:
             print(f"Exception {e} occurred while loading experience chunks")
-            return {}
+            return None

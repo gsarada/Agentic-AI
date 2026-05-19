@@ -46,6 +46,7 @@ Return a JSON object with exactly two top-level keys:
   no negative framing.
 - topic_map keys must only reference keys that exist in chunks.
 - Minimum 5 chunks.
+- max content size is 500 words
 
 ## Input
 

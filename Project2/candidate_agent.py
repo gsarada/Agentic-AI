@@ -11,18 +11,21 @@ class Evaluation(BaseModel):
 
 def chat_system_prompt(state):
     name = state.get("name")
-    system_prompt = f"""You are acting as {name}, responding to questions on {name}'s personal website. \
+    system_prompt = f"""You are acting as {name} in an interview for a job, responding to questions on {name}'s professional experience. \
     Your role is to represent {name} accurately and compellingly to potential employers or collaborators.
     ## Your context (use this as your ONLY source of truth)
     ### Experience summary: 
      {state.get("exp_summary")}
     ### LinkedIn profile:
      {state.get("profile_text")}
+    ### Job Description:
+    {state.get("job_description")}
     ---
     ## Rules you must follow
     **Grounding:** Every answer must be built around specific examples, initiatives, metrics, or stories \
-    from the context above. Do not use generic industry language as a substitute for real experience. \
+    from the experience summary or linked profile provide above. Do not use generic industry language as a substitute for real experience. \
     If a specific example exists in the context, use it. If it does not, say so honestly.
+    **Relevance** Answer should be relevant to the job responsibilities while staying grounded with the experience provided.
     **No hallucination:** Do not invent numbers, frameworks, tool names, or outcomes that are not \
     present in the context. If the question touches an area not covered in the context, say: \
     "That's not something I have direct experience with, but related to that I did..." and pivot to the closest real experience.
@@ -44,6 +47,8 @@ def evaluator_system_prompt(state):
     {state.get("exp_summary")}
     ### LinkedIn profile:
     {state.get("profile_text")} 
+    ### Job Description:
+    {state.get("job_description")}
     ---
     ## Evaluation criteria (check ALL of these) 
     1. **Grounding** — Does every specific claim (metric, tool, initiative, outcome) appear in the context above? Flag \
@@ -140,17 +145,22 @@ def evaluate(reply, message, history, state):
 
 def candidate_agent_chat(message, history, state):
     # print(f"State in candidate agent - {state}")
-    rounds = state["candidate_agent"]["rounds"]
-    answers_given = state["candidate_agent"]["answers"]
-    if answers_given == max_answers:
-        state["candidate_agent"]["rounds"] = rounds + 1
-        reply = "I have reached the limits. Please try again later"
-    else:
-        reply = run(message, history, state)
-        eval_response = evaluate(reply, message, history, state)
-        print(f'Evaluation result - {eval_response}')
-        if not eval_response.acceptable:
-            reply = rerun(reply, message, history, eval_response, state)
-        state["candidate_agent"]["answers"] = answers_given + 1
+    try:
+        rounds = state["candidate_agent"]["rounds"]
+        answers_given = state["candidate_agent"]["answers"]
+        if answers_given == max_answers:
+            state["candidate_agent"]["rounds"] = rounds + 1
+            state["candidate_agent"]["answers"] = 0
+            reply = "You have reached the limits. Please try again later"
+        else:
+            reply = run(message, history, state)
+            eval_response = evaluate(reply, message, history, state)
+            print(f'Evaluation result - {eval_response}')
+            if not eval_response.acceptable:
+                reply = rerun(reply, message, history, eval_response, state)
+            state["candidate_agent"]["answers"] = answers_given + 1
+    except Exception as e:
+        print(f"Exception {e} occurred")
+        reply = "Encountered error. Please try again"
     print(f'Chat Reply - {reply}')
     return reply, state

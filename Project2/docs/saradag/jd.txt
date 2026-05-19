@@ -14,7 +14,6 @@ Manage large-scale technology programs, budgets, vendor relationships, and strat
 Foster a culture of innovation, collaboration, accountability, and continuous improvement
 Ensure compliance with regulatory, audit, risk, and operational requirements in a highly regulated financial environment
 
-
 Requirements:
 Experience in infrastructure engineering, DevOps, cloud engineering, or platform engineering within large-scale enterprise environments
 Proven leadership experience managing global engineering organizations and large transformation programs
