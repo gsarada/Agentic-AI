@@ -3,5 +3,11 @@
 *.iml
 docs/*.txt
 nohup.out
+
+# Ignore pycache
 __pycache__
 **/__pycache__
+
+# Ignore any file with "secret" in the name
+*secret*
+*token*

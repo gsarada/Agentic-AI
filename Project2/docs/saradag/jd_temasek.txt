@@ -1,0 +1,90 @@
+seeking a Director of Operations to fundamentally reinvent how technology operations are designed, run, and scaled across its Technology, Applications, Digital and Data platforms.
+
+
+
+This is not a traditional operations role. The mandate is to build an AI-first, autonomous operations capability—shifting from reactive support models to self-healing, predictive, and intelligence-driven systems.
+
+The role will challenge legacy constructs, aggressively reduce operational complexity, and deliver step-change improvements in reliability, security, and cost efficiency. Success will require both deep technical credibility and the ability to drive enterprise-wide transformation at pace.
+
+Responsibilities
+Reinvent Operations into an AI-Native Capability
+
+Redesign operations from the ground up into an AI-first, automation-led model
+Build and scale AIOps platforms enabling predictive detection, autonomous remediation, and continuous optimisation
+Eliminate manual, repetitive operational processes through intelligent automation and GenAI-driven workflows
+Establish self-healing systems as the default, not the aspiration
+
+
+Deliver Near-Zero Downtime at Scale
+
+Drive a step-change in system reliability, targeting near-zero unplanned outages
+Institutionalise SRE principles, error budgets, and resilience engineering across all platforms
+Implement deep observability and real-time operational intelligence
+Hold teams accountable for measurable reliability outcomes, not activity
+
+
+Radically Optimise Cost-to-Run
+
+Challenge and reduce structural cost baselines across infrastructure, cloud, and applications
+Deploy AI-driven FinOps, workload optimisation, and autonomous scaling
+Replace fragmented tooling and duplicated processes with simplified, platform-based models
+Deliver sustained cost reduction without compromising performance, resilience, or security
+
+
+Cybersecurity Execution & Control Discipline
+
+Partner with the CISO to implement and enforce cybersecurity controls in strict alignment with enterprise cybersecurity policies
+Ensure consistent, measurable execution of security controls across all platforms and environments
+Embed security into operational workflows, system design, and deployment pipelines
+Maintain continuous audit readiness through strong control implementation and evidence-based reporting
+
+
+Build Autonomous Incident Management
+
+Transform incident management into an AI-assisted, increasingly autonomous capability
+Enable real-time detection, automated triage, and rapid containment of incidents
+Lead major incident response with precision and speed, minimising business impact
+Drive a culture where every incident results in systemic elimination—not repeated firefighting
+Set a new Standard for Governance and Audit
+Establish real-time, data-driven control environments—moving beyond periodic audit readiness
+Lead all audits with a “no surprises” standard, ensuring consistent control effectiveness
+Drive zero-backlog remediation discipline
+Integrate governance directly into platforms through automation and policy-as-code
+
+
+Modernise and Simplify the Technology Landscape
+
+Aggressively reduce legacy complexity and technical debt
+Drive transition toward cloud-native, platform-based architectures
+Standardise and rationalise tooling, platforms, and processes
+Enable faster delivery cycles through operational simplicity and scalability
+
+
+Build a High-Performance, Future-Ready Organisation
+
+Assemble and lead elite teams across AIOps, SRE, cloud, and cybersecurity operations
+Set a high-performance bar with clear accountability for outcomes
+Attract and retain talent capable of operating in high-automation, high-expectation environments
+Act as a force multiplier across CTO/CDO/CISO and business leadership
+
+
+Drive Relentless Transformation
+
+Continuously challenge the status quo—no “steady state” mindset
+Benchmark against leading global technology organisations, not industry averages
+Position operations as a competitive advantage for Temasek, not a support function
+Deliver transformation at pace, with visible and measurable impact
+Requirements
+Bachelor’s or Master’s degree in Computer Science, Engineering, Cybersecurity, AI or related field
+Relevant professional certifications (e.g. CISSP, CISM, ITIL and cloud certifications) are an added advantage.
+Min.15 years of experience in technology operations, with significant transformation exposure including 7+ years in senior leadership roles
+Proven experience in replatforming or modernising large-scale enterprise environments, driving automation- or AI-led operational
+Proven experience building or scaling AIOps / automation-first operations environments, cloud-native platforms (AWS, Azure, GCP), observability, resilience engineering, and SRE practices
+Strong understanding of cybersecurity control implementation, platform engineering and modern infrastructure architectures
+Track record of rebuilding or significantly transforming operations functions
+Ability to operate in ambiguity while driving clarity and execution
+Comfortable making bold decisions with enterprise-wide impact
+Relentless focus on outcomes over activity
+Strong operational discipline with the ability to drive sustained change
+High standards for performance, ownership, and delivery
+Demonstrated ability to deliver material cost reductions at scale, manage complex budgets and vendor ecosystems & connect operational transformation directly to enterprise value creation
