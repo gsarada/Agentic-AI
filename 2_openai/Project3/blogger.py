@@ -1,7 +1,7 @@
 import asyncio
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
-from get_llm_model import get_model
+from  get_llm_model import get_model
 from publisher import create_post
 from prompts import (
     analyst_prompt,
@@ -9,10 +9,8 @@ from prompts import (
 )
 from agents import (
     Agent, Runner, trace, function_tool, OpenAIChatCompletionsModel,
-    ModelSettings, handoff, input_guardrail, InputGuardrailTripwireTriggered,
-    GuardrailFunctionOutput
+    handoff, input_guardrail, GuardrailFunctionOutput
 )
-from agents.extensions import handoff_filters
 
 load_dotenv(override=True)
 
