@@ -1,9 +1,10 @@
-.env
+**/.env
 .idea
 *.iml
 **/docs/*
+**/output/*
 nohup.out
-.DS_Store
+**/.DS_Store
 # Ignore pycache
 __pycache__
 **/__pycache__

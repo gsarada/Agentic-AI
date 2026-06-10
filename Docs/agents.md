@@ -42,3 +42,31 @@ Create an instance of agent, use 'with trace()' to track the agent and call 'run
 - Vibe with variety - ask for multiple possible solutions to the same problem
 
 Send email free - http://sendgrid.com
+
+### Crew AI
+Offerings 
+- CrewAI Enterprise - Multi-agent platform for deploying, running and monitoring Agentic AI
+- CrewAI UI Studio - no-code/low-code product for creating multi-agent systems
+- Open-source framework - Orchestrate high performing AI agents with ease and scale. Offers crewai crews and crewai flows
+Core Concepts
+- Agent - an autonomous unit, with an LLM, a role, a goal, a backstory, memory and tools
+- Task - a specific assignment to be carried out, with a description, expected output and agent
+- Crew - a team of Agents and Tasks;either Sequential or Hierarchical (use a manager LLM to assign)
+Configurations
+- Agents and Tasks can be created by code setting the backstory, description, expected output etc,
+  or each one can be defined in a YAML file and referred in code
+- Need to define crew in a class annotated with @CrewBase. Agents annotated with @agent, tasks - @task and finally crew - @crew which brings together agents and tasks
+- It uses simple LiteLLM to interface with LLM's with keys set in .env file (Ex - llm = LLM(model="<provider>/<model>"))
+- crewai creates a scaffolding folder structure and uses uv
+   uv tool install crewai - to install crew
+   crewai create crew my_crew or crewai create flow my_flow
+- This creates a folder structure as below 
+   my_crew
+     |-- src
+          |-- my_crew
+                |-- config
+                      |-- agents.yaml
+                      |-- tasks.yaml
+                |-- crew.py
+                |-- main.py
+- run with cmd -  crewai run
