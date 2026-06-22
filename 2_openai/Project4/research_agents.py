@@ -49,14 +49,14 @@ async def handle_stream(event: AgentToolStreamEvent) -> None:
 @function_tool
 def writer_tool(report: dict):
     print(f"Report content received - {report}")
-    content = report.content if report.content else ""
-    file_path = f"docs/report-{datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')}"
+    content = report["content"] if report["content"] else ""
+    file_path = f"docs/report-{datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')}.txt"
     directory = os.path.dirname(file_path)
     try:
         # Create the directory if it doesn't exist
         if not os.path.exists(directory):
             os.makedirs(directory)
-        with open(file_path, "wb", encoding="utf-8") as f:
+        with open(file_path, "wb") as f:
             f.write(content)
     except Exception as e:
         print("Unable to write to file")

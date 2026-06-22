@@ -1,0 +1,124 @@
+design_task:
+  description: >
+    Design a layered, functional architecture for the requirements.
+
+    Architectural Mandates:
+    1. Separation of Concerns: Separate the system into distinct layers:
+       - Domain Layer (Pure, immutable business data structures and types)
+       - Use Case / Service Layer (Pure pure-functional business workflows, orchestrating domain logic)
+       - Infrastructure / Adapter Layer (Side-effect boundary: database operations, network I/O, API clients)
+    2. Functional Paradigm: Avoid stateful OOP classes. Use pure functions, type hints (Typing, Pydantic, or Dataclasses), and handle errors using monads/result types rather than raising unhandled exceptions.
+
+    Input Requirements: {requirements}
+
+  expected_output: >
+    A detailed design for the engineer, identifying the different component layers and functional requirements for each layer.
+  agent: design_lead
+  output_file: output/design.json
+
+plan_task:
+  description: >
+    You are given:
+    1. Product requirements
+    2. Architecture specification from Engineering Lead
+
+    Requirements:
+    {requirements}
+
+    Your responsibilities:
+    STEP 1
+
+    Analyze the architecture and produce a detailed implementation roadmap.
+
+    Break the architecture into:
+
+    - modules
+    - packages
+    - services
+    - interfaces
+    - models
+    - repositories
+    - tests
+
+    STEP 2
+
+    Generate implementation tasks dynamically.
+
+    Example:
+
+    [
+      {
+        "task_id":"TASK_001",
+        "layer":"Domain",
+        "component":"User",
+        "description":"Implement User dataclass",
+        "dependencies":[],
+        "status":"pending"
+      }
+    ]
+  expected_output: >
+    A list of tasks defining the component and the implementation details in the format of EngineeringSubTask
+  agent: engineering_lead
+  context:
+    - design_task
+
+code_task:
+  description: >
+    Write python module that implements the component step by step, in order to achieve the functional requirements.
+    for each task planned by the engineering lead, repeat the following:
+    Step 1
+    Implement tasks one at a time.
+    Rules:
+    - Complete dependencies first
+    - Produce production quality code
+    - Use type hints everywhere
+    - Use dataclasses
+    - Follow functional design principles
+    - Avoid unnecessary inheritance
+    - Prefer composition
+    - Add docstrings
+    Step 2
+     Add to file list
+      [
+        {
+          "file_name": "", 
+          "file_content"=""
+        }
+      ]
+    Step 3
+     Continue with next task in the plan
+  expected_output: >
+    Python modules that implement and achieve the requirements for the functional layers defined by engineering lead.
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid Python code that can be directly saved to files and executed.
+  agent: backend_engineer
+  context:
+    - plan_task
+  callback: on_code_complete_callback
+
+frontend_task:
+  description: >
+    Write a gradio UI in a module app.py that demonstrates the given backend class in {module_name}.
+    Assume there is only 1 user, and keep the UI very simple indeed - just a prototype or demo.
+    Here are the requirements: {requirements}
+  expected_output: >
+    A gradio UI in module app.py that demonstrates the given backend class.
+    The file should be ready so that it can be run as-is, in the same directory as the backend module, and it should import the backend class from {module_name}.
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid Python code that can be directly saved to a file and executed.
+  agent: frontend_engineer
+  context:
+    - code_task
+  output_file: output/app.py
+
+test_task:
+  description: >
+    Write unit tests for the given backend module {module_name} and create a test_{module_name} in the same directory as the backend module.
+  expected_output: >
+    A test_{module_name} module that tests the given backend module.
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid Python code that can be directly saved to a file and executed.
+  agent: test_engineer
+  context:
+    - code_task
+  output_file: output/test_{module_name}.py

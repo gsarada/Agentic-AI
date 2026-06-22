@@ -12,3 +12,11 @@ __pycache__
 # Ignore any file with "secret" in the name
 *secret*
 *token*
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

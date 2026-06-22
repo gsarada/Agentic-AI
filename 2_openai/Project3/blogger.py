@@ -109,7 +109,7 @@ async def blog(topic: str):
                     reason = input("Please provide reason you do not want to publish")
                     state.reject(interruption, rejection_message=reason)
             result = await Runner.run(editor_agent, state)
-        print(response.final_output)
+        print(result.final_output)
 
 topic = input("Please enter the topic")
 asyncio.run(blog(topic))

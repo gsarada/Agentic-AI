@@ -213,8 +213,8 @@ class ResearchCrew:
     agents: List[BaseAgent]
     tasks: List[Task]
 
-    agents_config = "config/agents.yaml"
-    tasks_config = "config/tasks.yaml"
+    agents_config = "config/agents_v2.yaml"
+    tasks_config = "config/tasks_v2.yaml"
 
     @agent
     def researcher(self) -> Agent:

@@ -1,4 +1,5 @@
 import json
+from experience_retriever import get_chunks_for_topic, get_all_chunks_formatted
 
 get_chunks_for_topic_json = {
     "name": "get_chunks_for_topic",

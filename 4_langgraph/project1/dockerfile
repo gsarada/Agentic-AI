@@ -1,0 +1,10 @@
+# sandbox/Dockerfile
+FROM python:3.11-slim
+
+# Create a non-root user for execution
+RUN useradd -m sandboxuser
+USER sandboxuser
+WORKDIR /home/sandboxuser
+
+# Run an empty command loop or handle input dynamically
+CMD ["python3"]

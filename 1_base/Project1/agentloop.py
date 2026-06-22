@@ -37,12 +37,12 @@ def handle_tool_calls(tool_calls):
     results = []
     for tool_call in tool_calls:
         tool_name = tool_call.function.name
-    arguments = json.loads(tool_call.function.arguments)
-    print(f"Tool name: {tool_name}, tool args - {arguments}")
-    tool = globals().get(tool_name)
-    result = tool(**arguments) if tool else {}
+        arguments = json.loads(tool_call.function.arguments)
+        print(f"Tool name: {tool_name}, tool args - {arguments}")
+        tool = globals().get(tool_name)
+        result = tool(**arguments) if tool else {}
 
-    results.append({"role": "tool", "content": json.dumps(result), "tool_call_id": tool_call.id})
+        results.append({"role": "tool", "content": json.dumps(result), "tool_call_id": tool_call.id})
     return results
 
 create_todos_json = {

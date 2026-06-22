@@ -21,12 +21,47 @@ Are open-ended, have feedback loops and have no fixed path. Hence the output in 
 Risks - Unpredictable path, Unpredictable output, Unpredictable costs
 <br>Mitigations: Monitor (Langsmith), Guardrails ensure agents behave safely, consistently and within intended boundaries
 
+### Agent Tool Design Best Practices
+When integrating AI into real-world environments, tool descriptions must be explicit, structured, and informative. By following these principles:
+
+Use descriptive names.
+Provide structured metadata.
+Leverage JSON Schema for parameters.
+Ensure AI has contextual understanding.
+Include robust error handling.
+Provide informative error messages.
+Inject instructions into error messages.
+
+### Agent (GAME Framework) simulation
+Before  implementing any agent it is always better to simulate it using chat interfaces. Below prompt format can be used for the same
+~~~ 
+I'd like to simulate an AI agent that I'm designing. The agent will be built using these components:
+
+Goals: [List your goals]
+Actions: [List available actions]
+
+At each step, your output must be an action to take.
+
+Stop and wait and I will type in the result of
+the action as my next message.
+
+Ask me for the first task to perform.
+~~~
+This allows to 
+ - understand agent reasoning
+ - evolve tools and goals
+ - understand memory
+ - learning from failures
+ - prevent runaway agents (never stopping)
+ - rapid iteration and improvement
+ - learning from the agent (ask agent itself if anything can be improved)
+
 ### Agentic AI frameworks
 **Base** - No framework, MCP
 <br>**Level1** - OpenAI agents SDK, Crew AI  
 **Level2** - LangGraph, AutoGen
 
-##Openai Agent SDK
+## Openai Agent SDK
 ### Terminology
 - Agents - represent LLMs
 - Handoffs - represent interactions
@@ -43,7 +78,7 @@ Create an instance of agent, use 'with trace()' to track the agent and call 'run
 
 Send email free - http://sendgrid.com
 
-### Crew AI
+## Crew AI
 Offerings 
 - CrewAI Enterprise - Multi-agent platform for deploying, running and monitoring Agentic AI
 - CrewAI UI Studio - no-code/low-code product for creating multi-agent systems
@@ -70,3 +105,16 @@ Configurations
                 |-- crew.py
                 |-- main.py
 - run with cmd -  crewai run
+
+## Langgraph
+ 
+ Terminology
+ - Agent workflows are represented as <b><i>graphs</i></b>
+ - State represents the current snapshot of the application
+ - Nodes are python functions that represent agent logic. They receive current state, perform some action and return updated state
+ - Edges are python functions that determine which Node to execute next based on the state. It can be conditional or fixed
+
+## Autogen
+![img.png](img.png)
+
+Core building blocks - Models, Messages, Agents, Teams

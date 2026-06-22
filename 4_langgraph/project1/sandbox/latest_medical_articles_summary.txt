@@ -1,0 +1,31 @@
+Latest medical articles summary (up to 3 per source)
+
+Source: Medical Xpress
+1) Clues to psilocybin's epigenetic effects on people with alcohol use disorder
+   Summary: Researchers reported findings that help explain how psilocybin may influence gene regulation-related mechanisms in people with alcohol use disorder. The article focuses on biological clues rather than a treatment claim.
+
+2) AI could provide 'early alert' for breast cancer
+   Summary: The article describes research suggesting that artificial intelligence may help flag breast cancer earlier, potentially improving the timing of follow-up and diagnosis. It is presented as a research news item about detection support.
+
+3) Prehab can boost seniors' recuperation from spinal fusion surgery, trial finds
+   Summary: A trial reported that prehabilitation before spinal fusion surgery may improve recovery in older adults. The article emphasizes outcomes from the study and possible benefits of preparation before surgery.
+
+Source: Asia Research News
+1) New research shows that the gum disease bacterium P. gingivalis can slip into the bloodstream and infiltrate the heart
+   Summary: The article reports research linking a gum disease bacterium to heart tissue infiltration and scar formation, highlighting a possible pathway connecting oral infection and heart disease.
+
+2) New study: Unplanned healthcare utilisation increases cost burden for patients with cognitive impairment
+   Summary: This article summarizes a study showing that unexpected healthcare use can raise costs for patients with cognitive impairment. It points to the financial burden associated with these care episodes.
+
+3) The study uncovered a previously unknown protein pathway that, when blocked, kills blood cancer cells
+   Summary: Researchers identified a protein pathway that appears important for blood cancer cell survival. Blocking it killed cancer cells in the study, suggesting a possible direction for future therapies.
+
+Source: The Lancet
+1) AENEAS2 study: aumolertinib combined with chemotherapy improved progression-free survival
+   Summary: This research article reports that combining aumolertinib with chemotherapy improved progression-free survival compared with the comparator in the AENEAS2 study. The focus is on clinical trial outcomes.
+
+2) Pancreatic cancer article on oncogenic RAS mutations
+   Summary: The article discusses pancreatic cancer biology, noting that oncogenic RAS mutations are present in most cases and may represent a major target for research and treatment development.
+
+3) Ebola virus disease caused by Bundibugyo virus: challenges and priorities for epidemic preparedness and response
+   Summary: This article addresses preparedness and response needs for outbreaks of Ebola virus disease caused by Bundibugyo virus, emphasizing public health planning and outbreak readiness.

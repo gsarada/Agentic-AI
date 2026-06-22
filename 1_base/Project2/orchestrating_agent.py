@@ -5,7 +5,7 @@ from candidate_agent import candidate_agent_chat
 
 max_rounds = 1
 class Personas(Enum):
-    CANDIDATE = "Candidate",
+    CANDIDATE = "Candidate"
     INTERVIEWER = "Interviewer"
 
 

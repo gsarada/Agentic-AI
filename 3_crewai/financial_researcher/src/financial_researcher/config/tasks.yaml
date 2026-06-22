@@ -9,7 +9,7 @@ research_task:
     Make sure to organize your findings in a structured format with clear sections.
   expected_output: >
     A comprehensive research document with well-organized sections covering all the
-    requested aspects of {company}. include specific facts, figures, and examples where relevant.
+    requested aspects of {company}. include specific facts, figures, and examples where relevant. Include citation/source for each fact.
   agent: researcher
 
 analysis_task:
