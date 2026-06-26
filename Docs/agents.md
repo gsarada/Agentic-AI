@@ -61,6 +61,9 @@ This allows to
 <br>**Level1** - OpenAI agents SDK, Crew AI  
 **Level2** - LangGraph, AutoGen
 
+### AI Productivity Tools
+![img.png](media/ai-tools.png)
+
 ## Openai Agent SDK
 ### Terminology
 - Agents - represent LLMs
@@ -115,6 +118,17 @@ Configurations
  - Edges are python functions that determine which Node to execute next based on the state. It can be conditional or fixed
 
 ## Autogen
-![img.png](img.png)
+![img.png](media/autogen.png)
 
-Core building blocks - Models, Messages, Agents, Teams
+Autogen AgentChat - 
+Core building blocks: Models, Messages, Agents, Teams
+
+Autogen Core - 
+ - An agent interaction framework agnostic to agent abstraction with focus on managing interactions (creation and communication)
+between distributed and diverse agents.
+ - Provides a runtime environment, which facilitates communication between agents, manages their identities and lifecycles, and enforce security and privacy boundaries.
+ - Supports 2 types of communication infrastructure called runtimes - standalone and distributed
+ - Agent ID uniquely identifies an agent instance within an agent runtime – including distributed runtime. 
+   It is the “address” of the agent instance for receiving messages. It has two components: agent type and agent key.
+ - A distributed runtime consists of a 'worker runtime' that advertises agents to the host service and handles executing their code and 
+   a 'host service' connected to worker runtimes, handling message delivery and sessions for direct messages 
