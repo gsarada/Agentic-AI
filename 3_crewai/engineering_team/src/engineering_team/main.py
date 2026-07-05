@@ -21,14 +21,23 @@ The system should prevent the user from withdrawing funds that would leave them 
 module_name = 'account.py'
 class_name = 'account.py'
 
+requirement1 = """ A simple sqllite based shared goal board. 
+It should allow to add goals and tasks under the goal as parent
+The agents should be able to claim a task and mark it complete. It should allow to list all tasks and
+print the goals and tasks status as a live board refreshing the board at regular intervals. 
+Also create mcp server and mcp client for the class so it can be exposed as MCP tool. 
+Create a docker file so the MCP server can be deployed as a container"""
+module_name1 = 'live_board.py'
+class_name1 = 'live_board.py'
+
 def run():
     """
     Run the crew.
     """
     inputs = {
-        'requirements': requirement,
-        'module_name': module_name,
-        'class_name': class_name
+        'requirements': requirement1,
+        'module_name': module_name1,
+        'class_name': class_name1
     }
 
     try:

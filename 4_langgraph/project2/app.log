@@ -1,0 +1,123 @@
+2026-07-01 14:55:16,423 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x136ba0ad0>
+2026-07-01 14:55:22,459 - logger - INFO - The 2026 Nobel Peace Prize winner has not been officially announced yet. The official announcement is scheduled for 9 October 2026. I sent an email with that status.
+2026-07-01 14:57:17,641 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x1279a0ad0>
+2026-07-01 14:57:43,676 - logger - INFO - Saved the top 3 Shein product descriptions to:
+
+`/Users/saradagummadi/IdeaProjects/Agentic AI/4_langgraph/project2/sandbox/shein_top_3_products.txt`
+
+Contents:
+1. SHEIN BamGlam 2026 Fashion New Women's Long Dress  
+2. SHEIN LUNE 2pcs Women's Vacation Casual Solid Color Top + Printed Skirt Set  
+3. SHEIN Elenzya Women's Elegant Metal Ring Textured Knit Fitted Short Sleeve T-Shirt
+2026-07-01 15:07:39,294 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x12bca0ba0>
+2026-07-01 15:12:01,792 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x16929cba0>
+2026-07-01 15:12:53,374 - logger - INFO - Here is a high-level plan to get the recent articles from medicalexpress.com and send an email notification with summary:
+
+**Step 1: Web Scraping**
+
+* Use a web scraping library (e.g., BeautifulSoup, Scrapy) to extract the recent articles from medicalexpress.com.
+* Identify the HTML structure of the article list on the website.
+* Write Python code to parse the HTML, extract the article titles, and get the URLs of the articles.
+
+**Step 2: Article Retrieval**
+
+* Use a library like `requests` or `BeautifulSoup` to make HTTP requests to the article URLs and retrieve the full text of each article.
+* Parse the HTML content to extract relevant information such as author, publication date, and abstract (if available).
+
+**Step 3: Summary Generation**
+
+* Write Python code to generate a summary of each article based on the extracted information.
+* Use natural language processing (NLP) techniques or libraries like `sumy` to summarize the articles.
+
+**Step 4: Email Notification**
+
+* Set up an email client (e.g., SMTP, Gmail API) to send notifications to subscribers.
+* Write Python code to compose and send an email with the summary of each article.
+
+Here's a simple example using Python, BeautifulSoup, and `requests` libraries:
+```python
+import requests
+from bs4 import BeautifulSoup
+
+# Step 1: Web Scraping
+url = "https://www.medicalexpress.com/latest-articles"
+response = requests.get(url)
+soup = BeautifulSoup(response.content, 'html.parser')
+
+article_list = soup.find_all('li', {'class': 'article-list-item'})
+recent_articles = []
+
+for article in article_list:
+    title = article.find('h2').text.strip()
+    url = article.find('a')['href']
+    recent_articles.append({'title': title, 'url': url})
+
+# Step 2: Article Retrieval
+import requests
+
+def get_article_text(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    text = soup.get_text()
+    return text
+
+article_texts = []
+for article in recent_articles:
+    article_texts.append(get_article_text(article['url']))
+
+# Step 3: Summary Generation
+from sumy.parsers.plaintext import PluginParser
+from sumy.summarizers.text import TextSummarizer
+
+def summarize_text(text):
+    parser = PluginParser('plaintext')
+    summarizer = TextSummarizer()
+    summary = summarizer.parse(text, max_sentences=5)
+    return ' '.join(summary)
+
+article_summaries = []
+for text in article_texts:
+    summary = summarize_text(text)
+    article_summaries.append({'title': recent_articles[article_texts.index(text)]['title'], 'summary': summary})
+
+# Step 4: Email Notification
+import smtplib
+from email.mime.text import MIMEText
+
+def send_email(subject, body):
+    # Set up email client
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    from_addr = 'your-email@gmail.com'
+    to_addr = 'recipient-email@example.com'
+
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = from_addr
+    msg['To'] = to_addr
+
+    server.sendmail(from_addr, to_addr, msg.as_string())
+    server.quit()
+
+subject = "Recent Articles from Medicalexpress.com"
+body = '\n'.join([f'{article["title"]}: {article["summary"]}' for article in article_summaries])
+send_email(subject, body)
+```
+Please note that this is a basic example and may require modifications to work with your specific use case. You might also need to handle errors, exceptions, and security concerns when building a production-ready web scraper and email notifier.
+2026-07-01 15:22:43,228 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x14aba0ba0>
+2026-07-01 15:22:47,836 - logger - INFO - I need the actual medicalexpress.com pages or a way to browse that site directly; the search results didn’t return the site’s articles.
+Question: Please provide the specific medicalexpress.com article page or list the recent articles you want summarized.
+2026-07-01 15:25:12,676 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x1391a0ad0>
+2026-07-01 15:25:36,533 - logger - INFO - Done.
+2026-07-01 15:30:41,493 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x14e89cad0>
+2026-07-01 15:31:12,717 - logger - INFO - Done.
+2026-07-01 15:54:26,930 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x1395a0a00>
+2026-07-01 15:54:45,489 - logger - INFO - Email notification sent with summaries of three MedicalXpress medical-related articles.
+2026-07-01 16:16:01,453 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x1522cc120>
+2026-07-01 16:16:24,146 - logger - INFO - I can’t reliably extract three article URLs from the site with the available access, so I need the exact article links or permission to use search-result snippets only.
+Question: Please provide 3 specific MedicalXpress article URLs from https://medicalxpress.com, and I’ll summarize them and send the email notification.
+2026-07-01 16:37:27,768 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x166bc4200>
+2026-07-01 16:37:48,896 - logger - INFO - Email sent with the summaries of three medical-related Asia Research News articles.
+2026-07-01 17:21:10,521 - logger - INFO - <generator object worker_agent.<locals>.<genexpr> at 0x1264c0200>
+2026-07-01 17:21:20,489 - logger - INFO - The provided URL could not be resolved, so I can’t retrieve articles from it. I need a valid URL or alternative source to proceed.
+Question: The provided URL `https://does-not-exist.example` cannot be resolved, so I’m unable to retrieve any articles from it. Please provide a valid website URL or another source to search.

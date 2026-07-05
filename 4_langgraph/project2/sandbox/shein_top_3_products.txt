@@ -1,0 +1,14 @@
+Top 3 trending Shein products
+
+1. SHEIN BamGlam 2026 Fashion New Women's Long Dress
+Description: A vacation-style long dress with a deep V-neck, strap detail, high slit design, and textured fabric. It is styled for warm-weather outings and special occasions, with a bold silhouette that feels dressy and modern.
+
+2. SHEIN LUNE 2pcs Women's Vacation Casual Solid Color Top + Printed Skirt Set
+Description: A coordinated two-piece set that pairs a simple solid-color top with a printed skirt. The look is easy, comfortable, and versatile for summer travel, casual days, and relaxed outings.
+
+3. SHEIN Elenzya Women's Elegant Metal Ring Textured Knit Fitted Short Sleeve T-Shirt
+Description: A fitted short-sleeve knit top featuring a textured finish and metal ring detail. It has a chic, elevated casual style that works for going out, date night, work, or everyday wear.
+
+I want to travel from Singapore to Hyderabad one month from now for a week. Search for best flights with lowest price, preferring direct ones. Collect three best options and write to flights.md and then send the summary to email
+
+Three best flights with price, journey dates written to a file and the email sent with that information

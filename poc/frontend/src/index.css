@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-slate-950 text-slate-100 min-h-screen;
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 outline-none focus:border-violet-400;
+}
+
+.btn-primary {
+  @apply rounded-xl bg-violet-500 px-4 py-2 font-medium text-white hover:bg-violet-400;
+}
+
+.btn-secondary {
+  @apply rounded-xl border border-slate-700 px-4 py-2 hover:border-violet-400;
+}
+
+.card {
+  @apply rounded-2xl border border-slate-800 bg-slate-900 p-6;
+}

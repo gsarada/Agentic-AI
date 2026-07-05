@@ -53,11 +53,11 @@ def build_graph():
     graph_builder = StateGraph(State)
 
 
-    #5 Add Nodes
+    #4 Add Nodes
     graph_builder.add_node("chatbot", chatbot)
     graph_builder.add_node("tools", ToolNode([search, email])) # This is required to perform the tool call
 
-    # 5. Add edges
+    #5. Add edges
     graph_builder.add_edge(START, "chatbot")
     # tools_condition implicitly checks if the llm response contains tool_calls and is set to true
     graph_builder.add_conditional_edges("chatbot", tools_condition, {"tools", END})
@@ -68,6 +68,7 @@ def build_graph():
     db_path = "memory.db"
     conn = sqlite3.connect(db_path)
     memory = SqliteSaver(conn)
+    #6. Compile graph
     graph = graph_builder.compile(checkpointer=memory)
 
     display(Image(graph.get_graph(xray=True).draw_mermaid_png()))

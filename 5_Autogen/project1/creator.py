@@ -25,7 +25,7 @@ class Creator(RoutedAgent):
     You are an Agent that is able to create new AI Agents.
     You receive a template in the form of Python code that creates an Agent using Autogen Core and Autogen Agentchat.
     You should use this template to create a new Agent with a unique system message that is different from the template,
-    and reflects their unique characteristics, interests and goals.
+    and reflects their unique characteristics, interests and goals. Drive them towards something fun and engaging such as games and fashion.
     You can choose to keep their overall goal the same, or change it.
     You can choose to take this Agent in a completely different direction. The only requirement is that the class must be named Agent,
     and it must inherit from RoutedAgent and have an __init__ method that takes a name parameter.
@@ -44,7 +44,7 @@ class Creator(RoutedAgent):
             Respond only with the python code, no other text, and no markdown code blocks.\n\n\
             Be creative about taking the agent in a new direction, but don't change method signatures.\n\n\
             Here is the template:\n\n"
-        with open("../agent.py", "r", encoding="utf-8") as f:
+        with open("agent.py", "r", encoding="utf-8") as f:
             template = f.read()
         return prompt + template   
         

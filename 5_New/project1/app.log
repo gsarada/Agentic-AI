@@ -1,0 +1,1 @@
+2026-07-05 11:30:15,155 - logger - ERROR - Exception WorkerHandle.__init__() missing 2 required positional arguments: 'container' and 'started' occurred while launching worker

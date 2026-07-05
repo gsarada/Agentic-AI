@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marché Express</title>
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="game.css" />
+</head>
+<body>
+  <main class="shell">
+    <a class="back-link" href="../index.html">← Back to index</a>
+    <section class="hero card">
+      <div>
+        <p class="eyebrow">French food & drink vocab</p>
+        <h1>Marché Express</h1>
+        <p class="intro">Serve hungry customers, learn the French word, and keep your streak alive. Each round gets a little faster and a little trickier.</p>
+      </div>
+      <div class="stats">
+        <div><span>Score</span><strong id="score">0</strong></div>
+        <div><span>Streak</span><strong id="streak">0</strong></div>
+        <div><span>Level</span><strong id="level">1</strong></div>
+      </div>
+    </section>
+
+    <section class="card game-area">
+      <div class="prompt">
+        <p class="label">Customer asks for:</p>
+        <h2 id="englishPrompt">Loading…</h2>
+        <p class="hint">Choose the correct French translation below.</p>
+      </div>
+
+      <div id="choices" class="choices" aria-label="Answer choices"></div>
+
+      <div class="feedback-wrap">
+        <p id="feedback" class="feedback">Click a word to start.</p>
+        <button id="nextBtn" class="next-btn" type="button" disabled>Next order</button>
+      </div>
+    </section>
+
+    <section class="card vocab-card">
+      <h3>Kitchen glossary</h3>
+      <ul class="glossary">
+        <li><strong>le pain</strong> — bread</li>
+        <li><strong>le fromage</strong> — cheese</li>
+        <li><strong>la pomme</strong> — apple</li>
+        <li><strong>l'eau</strong> — water</li>
+        <li><strong>le lait</strong> — milk</li>
+        <li><strong>le café</strong> — coffee</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,624 @@
+# AI Personal Stylist & Virtual Try-On Platform (POC)
+
+## Objective
+
+Build a complete Proof of Concept (POC) for an AI-powered Personal Stylist and Virtual Try-On platform.
+
+The application should allow users to create a persistent shopping profile, upload body images and measurements, analyze products from any e-commerce website, recommend the best size, summarize customer reviews, and generate virtual try-on images.
+
+The solution should be modular, production-ready, and easily extensible to cloud services later.
+
+---
+
+# Technology Stack
+
+Backend
+
+* Python 3.12
+* FastAPI
+* SQLAlchemy
+* SQLite
+* Pydantic
+* LangGraph (preferred) or plain Python orchestration
+* httpx
+* BeautifulSoup
+* Playwright (for JavaScript-heavy sites)
+* Pillow
+* OpenCV
+
+Frontend
+
+* React + Vite
+  OR
+* Next.js
+
+Styling
+
+* Tailwind CSS
+
+Storage
+
+* SQLite database
+* Local filesystem for uploaded images
+* Local filesystem for generated try-on images
+
+Project Structure
+
+Use a clean architecture with folders similar to:
+
+backend/
+agents/
+services/
+models/
+routers/
+database/
+storage/
+utils/
+
+frontend/
+
+images/
+
+uploads/
+
+generated/
+
+database.sqlite
+
+requirements.txt
+
+README.md
+
+.env.example
+
+---
+
+# Phase 1 - User Registration
+
+Create APIs and UI for user registration.
+
+Each user has:
+
+User ID
+
+Name
+
+Email
+
+Password (hashed)
+
+Height
+
+Weight
+
+Gender (optional)
+
+Age (optional)
+
+Chest
+
+Waist
+
+Hip
+
+Shoulder Width
+
+Sleeve Length
+
+Leg Length
+
+Inseam
+
+Neck
+
+Shoe Size
+
+Preferred Fit
+
+Preferred Colors
+
+Preferred Fabrics
+
+Budget
+
+Favorite Brands
+
+Preferred Occasions
+
+Store everything in SQLite.
+
+---
+
+# Phase 2 - Image Upload
+
+Allow uploading:
+
+Front image
+
+Side image
+
+Back image (optional)
+
+Requirements
+
+Store images locally
+
+Folder structure
+
+uploads/
+userId/
+front.jpg
+side.jpg
+back.jpg
+
+Store file paths in SQLite.
+
+Do not store images inside SQLite.
+
+---
+
+# Phase 3 - Profile Dashboard
+
+Display
+
+User measurements
+
+Uploaded images
+
+Preferences
+
+Allow editing.
+
+---
+
+# Phase 4 - Product URL Input
+
+Allow user to paste any product URL.
+
+Examples
+
+Amazon
+
+Nike
+
+Zara
+
+Myntra
+
+ASOS
+
+Uniqlo
+
+Shein
+
+H&M
+
+The application should automatically:
+
+Retrieve HTML
+
+Extract product information
+
+If JavaScript rendering is needed, automatically use Playwright.
+
+Extract
+
+Product name
+
+Brand
+
+Price
+
+Available sizes
+
+Product images
+
+Description
+
+Material
+
+Fit
+
+Size chart
+
+Customer reviews
+
+Ratings
+
+Store extracted information temporarily.
+
+Use BeautifulSoup whenever possible.
+
+---
+
+# Phase 5 - Product Knowledge Agent
+
+Create a Product Agent that converts raw product information into structured JSON.
+
+Example
+
+{
+"name":"",
+"brand":"",
+"fabric":"",
+"stretch":"",
+"fit":"",
+"season":"",
+"careInstructions":"",
+"availableSizes":[],
+"sizeChart":{},
+"reviewSummary":"",
+"productImages":[]
+}
+
+---
+
+# Phase 6 - Customer Profile Agent
+
+Create an agent that converts user profile into an AI profile.
+
+Example
+
+{
+"bodyShape":"Athletic",
+"height":178,
+"waist":84,
+"chest":102,
+"preferredFit":"Relaxed",
+"favoriteColors":["Blue","Black"],
+"fabricPreference":["Cotton","Linen"]
+}
+
+---
+
+# Phase 7 - Size Recommendation Agent
+
+Inputs
+
+Customer profile
+
+Product profile
+
+Size chart
+
+Reviews
+
+Reason over all inputs.
+
+Output
+
+Recommended Size
+
+Confidence Score
+
+Detailed explanation
+
+Alternative size if unavailable
+
+Explain WHY.
+
+---
+
+# Phase 8 - Review Intelligence Agent
+
+Summarize reviews into
+
+Pros
+
+Cons
+
+Sizing feedback
+
+Fabric feedback
+
+Quality
+
+Shrinkage
+
+Color accuracy
+
+Durability
+
+Then personalize the summary using the user's measurements and preferences.
+
+Example
+
+"Customers report this shirt runs small. Since you prefer a relaxed fit, Large is recommended."
+
+---
+
+# Phase 9 - Virtual Try-On
+
+Design the code so the virtual try-on implementation is abstracted behind an interface.
+
+Example
+
+VirtualTryOnProvider
+
+generate()
+
+Initially implement a Mock Provider that copies the uploaded user image into the generated folder with placeholder text, so the end-to-end workflow can be tested.
+
+Then implement a second provider for IDM-VTON.
+
+The provider should accept
+
+User image
+
+Product image
+
+Return generated image path.
+
+The architecture should allow easy replacement with
+
+Google TryOn
+
+OpenAI Images
+
+FASHN AI
+
+or any REST API.
+
+---
+
+# Phase 10 - Conversation Agent
+
+Create a chat interface.
+
+The assistant should answer questions like
+
+Will this fit me?
+
+Should I size up?
+
+Does this fabric stretch?
+
+Is it suitable for hot weather?
+
+Does it shrink?
+
+Would another color suit me better?
+
+Use the product information and customer profile as context.
+
+---
+
+# Phase 11 - Multi-Agent Workflow
+
+Implement using LangGraph.
+
+Agents
+
+Product Extraction Agent
+
+Product Knowledge Agent
+
+Customer Profile Agent
+
+Review Agent
+
+Size Recommendation Agent
+
+Virtual Try-On Agent
+
+Conversation Agent
+
+Each agent should have
+
+Input schema
+
+Output schema
+
+Logging
+
+Error handling
+
+---
+
+# Phase 12 - Database Schema
+
+Create tables
+
+Users
+
+UserMeasurements
+
+UserPreferences
+
+UserImages
+
+Products
+
+Recommendations
+
+GeneratedImages
+
+ChatHistory
+
+---
+
+# Phase 13 - REST APIs
+
+Create REST APIs for
+
+POST /register
+
+POST /login
+
+GET /profile
+
+PUT /profile
+
+POST /upload-images
+
+POST /analyze-product
+
+POST /recommend-size
+
+POST /generate-tryon
+
+POST /chat
+
+GET /history
+
+---
+
+# Phase 14 - Frontend
+
+Pages
+
+Register
+
+Login
+
+Profile
+
+Upload Images
+
+Paste Product URL
+
+Product Analysis
+
+Recommendation
+
+Generated Try-On Gallery
+
+Chat Assistant
+
+History
+
+Responsive design.
+
+---
+
+# Phase 15 - Configuration
+
+All providers should be configurable.
+
+Example
+
+TRYON_PROVIDER=idm-vton
+
+or
+
+TRYON_PROVIDER=mock
+
+or
+
+TRYON_PROVIDER=openai
+
+Similarly
+
+LLM_PROVIDER=openai
+
+MODEL=gpt-5
+
+Do not hardcode providers.
+
+---
+
+# Phase 16 - Logging
+
+Use structured logging.
+
+Log
+
+Agent execution
+
+Duration
+
+Errors
+
+Requests
+
+Responses
+
+---
+
+# Phase 17 - Future Extensibility
+
+The architecture should make it easy to replace
+
+SQLite → PostgreSQL
+
+Local storage → Azure Blob Storage / S3
+
+Mock Try-On → Commercial API
+
+Local LLM → OpenAI
+
+SQLite → Cosmos DB
+
+without changing business logic.
+
+---
+
+# Deliverables
+
+Generate the project incrementally.
+
+Do NOT generate everything in one response.
+
+Follow this workflow:
+
+Step 1
+
+Create the folder structure.
+
+Wait.
+
+Step 2
+
+Generate backend.
+
+Wait.
+
+Step 3
+
+Generate frontend.
+
+Wait.
+
+Step 4
+
+Implement agents.
+
+Wait.
+
+Step 5
+
+Implement product scraping.
+
+Wait.
+
+Step 6
+
+Implement LangGraph workflow.
+
+Wait.
+
+Step 7
+
+Implement virtual try-on provider abstraction.
+
+Wait.
+
+Step 8
+
+Integrate everything.
+
+Wait.
+
+At every step
+
+Provide complete code.
+
+Provide filenames.
+
+Provide installation instructions.
+
+Provide commands to run.
+
+Ensure the project runs locally after every completed step.
+
+The generated code should follow production-quality engineering practices, use dependency injection where appropriate, include type hints, robust error handling, and be organized so that individual components can later be packaged as reusable services.

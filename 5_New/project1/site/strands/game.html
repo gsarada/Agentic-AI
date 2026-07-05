@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Les Nombres: Sprint 1–20</title>
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="game.css">
+</head>
+<body>
+  <main class="shell">
+    <a class="back-link" href="../index.html">← Back to index</a>
+    <section class="game-card">
+      <div class="headline">
+        <p class="eyebrow">French learning game</p>
+        <h1>Les Nombres: Sprint 1–20</h1>
+        <p class="intro">Match the French number word to the digit before the clock runs out. Each round gets a little faster.</p>
+      </div>
+
+      <div class="hud">
+        <div><span>Score</span><strong id="score">0</strong></div>
+        <div><span>Streak</span><strong id="streak">0</strong></div>
+        <div><span>Level</span><strong id="level">1</strong></div>
+        <div><span>Time</span><strong id="time">0</strong></div>
+      </div>
+
+      <div class="arena">
+        <div class="prompt-panel">
+          <p class="label">Find the French word for</p>
+          <div id="number" class="number">1</div>
+          <div id="wordHint" class="word-hint">un</div>
+        </div>
+
+        <div class="choices" id="choices" aria-label="Answer choices"></div>
+      </div>
+
+      <div class="feedback-row">
+        <p id="feedback" class="feedback" aria-live="polite">Press Start to begin.</p>
+        <button id="startBtn" class="primary">Start game</button>
+      </div>
+
+      <section class="reference">
+        <h2>Quick reference</h2>
+        <p>un, deux, trois, quatre, cinq, six, sept, huit, neuf, dix, onze, douze, treize, quatorze, quinze, seize, dix-sept, dix-huit, dix-neuf, vingt</p>
+      </section>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

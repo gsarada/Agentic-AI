@@ -1,0 +1,8 @@
+docker run -d -i --init \
+  --name playwright-mcp-server \
+  --cpus 1  --shm-size=1gb\
+  -p 3000:3000 \
+  -e PLAYWRIGHT_MCP_PORT=3000 \
+  -e PLAYWRIGHT_MCP_HOST=0.0.0.0 \
+  -e TRANSPORT=streamable_http \
+  mcr.microsoft.com/playwright/mcp:latest

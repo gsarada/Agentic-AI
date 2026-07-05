@@ -109,13 +109,22 @@ Configurations
                 |-- main.py
 - run with cmd -  crewai run
 
-## Langgraph
+## Langchain/Langgraph
  
  Terminology
  - Agent workflows are represented as <b><i>graphs</i></b>
  - State represents the current snapshot of the application
  - Nodes are python functions that represent agent logic. They receive current state, perform some action and return updated state
  - Edges are python functions that determine which Node to execute next based on the state. It can be conditional or fixed
+
+The abstraction layers
+1. langchain-core: building blocks such as models, messages and tools. Everything can be defined and controlled
+2. langgraph: Orchestration layer to manage StateGraph, nodes, edges, checkpoints used to manually control the flow
+3. langchain: the agent loop is prebuilt. Just need to supply model, tools and prompt
+4. deepagents: Harness layer enabling planning, sub agents, access to file system. Just need to pass the intent.
+
+Middleware allows to add custom logic to the flow as part of create_agent(). Few examples of builtin middleware
+functions are PIIMiddleware, SummarizationMiddleware, HumanInTheLoopMiddleware
 
 ## Autogen
 ![img.png](media/autogen.png)
@@ -130,5 +139,46 @@ between distributed and diverse agents.
  - Supports 2 types of communication infrastructure called runtimes - standalone and distributed
  - Agent ID uniquely identifies an agent instance within an agent runtime – including distributed runtime. 
    It is the “address” of the agent instance for receiving messages. It has two components: agent type and agent key.
- - A distributed runtime consists of a 'worker runtime' that advertises agents to the host service and handles executing their code and 
-   a 'host service' connected to worker runtimes, handling message delivery and sessions for direct messages 
+ - A distributed runtime consists of a 
+     - 'worker runtime' that advertises agents to the host service and handles executing their code and 
+     - 'host service' connected to worker runtimes, handling message delivery and sessions for direct messages 
+
+## ADK (Agent Development Kit) and A2A
+- Code first (Agents and tools in python or java)
+- A typed function is a tool
+- adk web - local trace playground
+- MCP and A2A - Protocols for communications with tools and agents
+
+## Strands
+
+## Pydantic AI
+
+## MS Agent Framework
+
+## Agno
+
+## Mastra
+
+## MCP
+- MCP involves three core components
+   - Host is the LLM app like Claude or the agentic solution
+   - MCP Client lives inside Host and connects 1:1 with MCP server
+   - MCP Server provides tools, context and prompts for use by host 
+- Architecture -
+   ![img_4.png](img_4.png)
+- MCP Servers most often run on local computer. 
+- MCP supports two Transport mechanisms
+   - Stdio spawns a process and communicates via standard input/output
+      ![img_5.png](img_5.png)
+   - Streamable HTTP uses HTTP POST and GET requests
+- MCP Marketplaces
+  - https://mcp.so
+  - https://glama.ai/mcp
+  - https://smithery.ai
+  - for more check here - https://huggingface.co/blog/LLMhacker/top-11-essential-mcp-libraries
+- Reference blog on MCP - https://huggingface.co/blog/Kseniase/mcp
+- Why make an MCP Server
+  - Allow others to incorporate tools and resources
+  - Consistently incorporate all MCP servers
+  - Understand the plumbing
+- Is it's only for internal specific use, use @tool/@function_tool instead

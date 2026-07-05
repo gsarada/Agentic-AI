@@ -5,12 +5,12 @@ from autogen_core import AgentId
 import messages
 import asyncio
 
-HOW_MANY_AGENTS = 5
+HOW_MANY_AGENTS = 1
 
 async def create_and_message(worker, creator_id, i: int):
     try:
         result = await worker.send_message(messages.Message(content=f"agent{i}.py"), creator_id)
-        with open(f"idea{i}.md", "w") as f:
+        with open(f"sandbox/idea{i}.md", "w") as f:
             f.write(result.content)
     except Exception as e:
         print(f"Failed to run worker {i} due to exception: {e}")

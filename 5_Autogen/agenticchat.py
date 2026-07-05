@@ -132,7 +132,8 @@ async def agent_team(source, dest):
 
 
 async def agent_with_mcp_tool():
-    fetch_mcp_server = StdioServerParams(command="uvx", args=["mcp-server-fetch"], read_timeout_seconds=30)
+    fetch_mcp_server = StdioServerParams(command="uvx", args=["mcp-server-fetch",
+                                                              "--ignore-robots-txt"], read_timeout_seconds=30)
     fetcher = await mcp_server_tools(fetch_mcp_server)
 
     # Create an agent that can use the fetch tool.
@@ -140,7 +141,7 @@ async def agent_with_mcp_tool():
     agent = AssistantAgent(name="fetcher", model_client=model_client, tools=fetcher, reflect_on_tool_use=True)
 
     # Let the agent fetch the content of a URL and summarize it.
-    result = await agent.run(task="Review https://medium.com/@Sgarticles/stop-building-llm-wrappers-f5f184535b88  and summarize what you learn. Reply in Markdown.")
+    result = await agent.run(task="Review https://www.linkedin.com/in/sarada-gummadi/  and summarize what you learn. Reply in Markdown.")
     print(result.messages[-1].content)
 
 
