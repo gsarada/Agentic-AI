@@ -98,10 +98,10 @@ editor_agent = Agent(name="Chief Editor", instructions=main_editor_prompt, model
 
 async def blog(topic: str):
     with trace("blogger trace"):
-        response = await Runner.run(editor_agent, f"Topic - {topic}")
-        if response.interruptions:
-            state = response.to_state()
-            for interruption in response.interruptions:
+        result = await Runner.run(editor_agent, f"Topic - {topic}")
+        if result.interruptions:
+            state = result.to_state()
+            for interruption in result.interruptions:
                 approve = input("Do you want to continue to publish? Yes or No")
                 if approve == "Yes":
                     state.approve(interruption)
